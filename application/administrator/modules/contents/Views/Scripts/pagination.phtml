@@ -1,0 +1,45 @@
+	
+   
+<div class="form-inline form-full-right">    
+    <input id="paginator" name="paginator" type="hidden"/>
+    <div class="form-group">
+	    <ul class="pagination pagination-sm"  style="margin: 0px; padding: 5px 0px 0px 0px;">
+	        <!-- Previous page link -->
+	        <?php if(isset($this->previous)) {?>
+	        	<li><a href="#" onClick=" $('#paginator').val('<?= $this->first; ?>'); $(this).closest('form').submit(); return false; " data-toggle="tooltip" title="Start"><span class="glyphicon glyphicon-fast-backward"></span></a></li>
+	        	<li><a href="#" onClick=" $('#paginator').val('<?= $this->previous; ?>'); $(this).closest('form').submit(); return false; " data-toggle="tooltip" title="Previous"><span class="glyphicon glyphicon-backward"></span></a></li>
+	        <?php }else{?>
+	        	<li class="disabled"><a href="#"><span class="glyphicon glyphicon-fast-backward"></span></a></li>
+	        	<li class="disabled"><a href="#"><span class="glyphicon glyphicon-backward"></span></a></li>
+	        <?php }?>
+	        
+	        <!-- Numbered page link -->
+	        <?php foreach($this->pagesInRange as $page){?>
+	            <?php if($page != $this->current){?>
+	                <li><a href="#" onClick=" $('#paginator').val('<?= $page;?>'); $(this).closest('form').submit(); return false; " data-toggle="tooltip" title="Page <?= $page;?>"><?= $page;?></a></li>
+	            <?php }else{?>
+	                <li class="active"><a href="#"><?= $page;?><span class="sr-only">(current)</span></a></li>
+	            <?php }?>
+	        <?php }?>
+	        <!-- Next page link $this->next-->
+	        <?php if(isset($this->next)){?>
+	            <li><a href="#" onClick=" $('#paginator').val('<?= $this->next; ?>'); $(this).closest('form').submit(); return false; " data-toggle="tooltip" title="Next"><span class="glyphicon glyphicon-forward"></span></a></li>
+	            <li><a href="#" onClick=" $('#paginator').val('<?= $this->last; ?>'); $(this).closest('form').submit(); return false; " data-toggle="tooltip" title="End"><span class="glyphicon glyphicon-fast-forward"></span></a></li>
+	        <?php }else{?>
+	        	<li class="disabled"><a href="#"><span class="glyphicon glyphicon-forward"></span></a></li>
+	        	<li class="disabled"><a href="#"><span class="glyphicon glyphicon-fast-forward"></span></a></li>
+	        <?php }?>
+	    </ul>
+    </div>
+	<div class="form-group">
+		<select name="paginator_per_page" id="per_page" class="form-control input-sm" onChange="$(this.form).submit();" data-toggle="tooltip" title="Records per Page">
+			<option value="2" <?= $this->itemCountPerPage == 2 ? 'selected' : '';?>>2</option>
+			<option value="5" <?= $this->itemCountPerPage == 5 ? 'selected' : '';?>>5</option>
+			<option value="10" <?= $this->itemCountPerPage == 10 ? 'selected' : '';?>>10</option>
+			<option value="20" <?= $this->itemCountPerPage == 20 ? 'selected' : '';?>>20</option>
+ 			<option value="50" <?= $this->itemCountPerPage == 50 ? 'selected' : '';?>>50</option>
+ 			<option value="100" <?= $this->itemCountPerPage == 100 ? 'selected' : '';?>>100</option>
+		</select>
+	</div>
+</div>
+<div class="clearfix"></div>

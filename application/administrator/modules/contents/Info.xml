@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<administration>
+		<nav position="root">
+			<contents>
+	            <label>Contents</label>
+	            <type>Zend_Navigation_Page_Uri</type>
+	            <privilege>manager</privilege>
+	            <resource>contents</resource>
+	            <uri>#</uri>
+	            <pages>
+		            <article-manager>
+			            <label>Article Manager</label>
+			            <type>Zendvn_Navigation_Page</type>
+			            <module>contents</module>
+			            <controller>articles</controller>
+			        </article-manager>
+			        <category-manager>
+			            <label>Category Manager</label>
+			            <type>Zendvn_Navigation_Page</type>
+			            <module>contents</module>
+			            <controller>categories</controller>
+			        </category-manager>
+	            </pages>
+	        </contents>
+		</nav>
+	</administration>
+</config>

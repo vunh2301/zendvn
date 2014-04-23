@@ -1,0 +1,179 @@
+<form action="" id="adminForm" name="adminForm" method="post">	
+	<div class="row">
+		<nav class="navbar navbar-default" role="navigation">
+			<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-2">
+						<span class="sr-only">Toggle navigation</span>
+						&nbsp;<span class="glyphicon glyphicon-cog"></span>&nbsp;
+					</button>
+					<a class="navbar-brand" href="#">Category Manager : Categories</a>
+				</div>
+				<div class="collapse navbar-collapse" id="navbar-collapse-2">
+					<ul class="nav navbar-nav navbar-right">
+						<input id="task" name="task" type="hidden" value="edit"/>
+							<button type="button" onclick="$('#task').val('create');$(this).closest('form').submit();" class="btn btn-default btn-sm btn-primary navbar-btn" <?php echo ($this->isAllow('contents', 'create') == true ? '' : ' disabled')?>><span class="glyphicon glyphicon-plus-sign"></span> New</button>
+							<button type="button" onclick="if(!$(this).closest('form').find('table :checked').first().val()){alert('Please first make a selection from the list!');return false;}else{$('#task').val('edit');$(this).closest('form').submit();};" class="btn btn-default btn-sm navbar-btn"<?php echo ($this->isAllow('contents', 'edit') == true ? '' : ' disabled')?>><span class="glyphicon glyphicon-edit"></span> Edit</button>				
+							<button type="button" onclick="if(!$(this).closest('form').find('table :checked').first().val()){alert('Please first make a selection from the list!');return false;}else{$('#task').val('publish');$(this).closest('form').submit();};" class="btn btn-default btn-sm navbar-btn"<?php echo ($this->isAllow('contents', 'editState') == true ? '' : ' disabled')?>><span class="glyphicon glyphicon-ok text-success"></span> Publish</button>
+							<button type="button" onclick="if(!$(this).closest('form').find('table :checked').first().val()){alert('Please first make a selection from the list!');return false;}else{$('#task').val('unpublish');$(this).closest('form').submit();};" class="btn btn-default btn-sm navbar-btn"<?php echo ($this->isAllow('contents', 'editState') == true ? '' : ' disabled')?>><span class="glyphicon glyphicon-remove text-danger"></span> Unpublish</button>
+							<button type="button" onclick="if(!$(this).closest('form').find('table :checked').first().val()){alert('Please first make a selection from the list!');return false;}else{$('#task').val('delete');$(this).closest('form').submit();};" class="btn btn-default btn-sm btn-danger navbar-btn"<?php echo ($this->isAllow('contents', 'delete') == true ? '' : ' disabled')?>><span class="glyphicon glyphicon-remove-sign"></span> Delete</button>
+						
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#">Category Manager</a></li>
+			<li><a href="<?= $this->url(array('module' => 'contents', 'controller'=>'articles', 'action'=>'index'), null, true); ?>">Article Manager</a></li>
+		</ul>
+		<div class="panel panel-default tabs-panel">
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-4 form-group">
+						<div class="input-group">
+							<input value="<?php echo $this->filter['search']; ?>" name="filter_search" id="filter_search" placeholder="Search Category" type="text" class="form-control input-sm">
+							<span class="input-group-btn">
+								<button class="btn btn-default btn-sm" type="button" onclick="$(this).closest('form').submit();">Search</button>
+								<button class="btn btn-default btn-sm" type="button" onclick="$('#filter_search').val(''); $(this).closest('form').submit();">Reset</button>
+							</span>
+						</div>
+						
+					</div>
+					<div class="col-sm-8">
+						<div class="form-inline form-full-right">
+							<div class="form-group input-sm hidden-xs">
+								<label>Filter by: </label>
+							</div>
+							<div class="form-group">
+						    	<?php echo $this->formSelect('filter_level', $this->filter['level'], array('class' => 'form-control input-sm', 'onchange' => '$(this).closest(\'form\').submit();'), array(
+						    			'*' => ' - Max Levels - ',
+						    			'1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', '6' => '6', '7' => '7', '8' => '8', '9' => '9', '10' => '10'
+						    	));?>
+						    </div>
+						    <div class="form-group">
+						    	<?php echo $this->formSelect('filter_status', $this->filter['status'], array('class' => 'form-control input-sm', 'onchange' => '$(this).closest(\'form\').submit();'), array(
+						    			'*' => ' - Status - ',
+						    			'publish' => 'Publish',
+						    			'unpublish' => 'Unpublish'
+						    	));?>
+						    </div>
+					    </div>
+					</div>
+					<div class="clearfix"></div>	
+				</div>
+				<div class="panel panel-default margin-fix table-responsive">
+					<table class="table table-hover table-striped">
+						<thead>
+							<tr>
+								<th class="text-center" width="1%"><input type="checkbox" onchange="$(this).closest('form').find('table :checkbox').prop('checked', this.checked);"></th>
+								<th class="text-center" width="1%">Image</th>
+								<th><?php echo $this->order('Title', 'title'); ?></th>
+								<th class="text-center" width="10%"><?php echo $this->order('Order', 'lft'); ?></th>
+								<th class="text-center" width="10%"><?php echo $this->order('Status', 'status'); ?></th>
+								<th class="text-center" width="10%">Access</th>
+								<th class="text-center" width="5%"><?php echo $this->order('ID', 'id'); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php 
+							if($this->categories) foreach ($this->categories as $category){
+								?>
+									<tr>
+										<td><input type="checkbox" id="record-<?php echo $category->id; ?>" name="record[]" value="<?php echo $category->id; ?>"></td>
+										<td>
+											<a href="<?php echo $this->url(array("module"=>"contents", "controller"=>"categories", "action"=>"edit", "id"=>$category->id));?>" class="thumbnail" style="width: 46px; height: 46px; margin: 0;padding:2px;">
+											<?php if($category->image){ ?>
+												<img style="max-height: 40px;" src="<?php echo $this->baseUrl('/modules/contents/images/thumbnails/' . $category->image);?>">
+											<?php }else{ ?>
+												<img data-src="holder.js/100%x100%" alt="none">
+											<?php }?>
+												
+											</a>
+										</td>
+										<td>
+										<?php if($category->hasRule()){ ?>
+											<span class="glyphicon glyphicon-warning-sign text-warning pull-right" data-toggle="tooltip" title="Has set permission setting"></span>
+										<?php } ?>										
+										<?php if(
+												$this->isAllow('contents.categories.' . $category->id, 'edit') ||
+												($this->isAllow('contents', 'editOwn') && $category->created_user_id == $user->id)
+										){?>
+											<p><?php echo str_repeat('|—', $category->level - 1); ?> <a href="<?php echo $this->url(array("module"=>"contents", "controller"=>"categories", "action"=>"edit", "id"=>$category->id));?>"><?php echo $category->title;?></a> <small>(Alias: <?php echo $category->alias;?>)</small></p>
+											<small><a href="#"  onclick="$('#record-<?php echo $category->id; ?>')[0].checked = true; $('#task').val('articles');$(this).closest('form').submit(); return false;">View Articles</a></small>
+										<?php }else{ ?>
+											<p class="text-muted"><?php echo str_repeat('|—', $category->level - 1); ?> <?php echo $category->title;?> <small>(Alias: <?php echo $category->alias;?>)</small></p>
+										<?php }?>
+										
+										</td>
+										<td class="text-center">
+											<div class="btn-group">
+												<button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#orderModal" onclick="$.post('<?php echo $this->url(array('module' => 'contents', 'controller' => 'categories', 'action' => 'ajax'), null, true) ?>/task/order/id/<?php echo $category->id; ?>', function(data){$('.dd').html(data).nestable({maxDepth: 1});}); "><span class="glyphicon glyphicon-pencil text-primary"></span></button>
+											</div>
+											<span class="badge"><?php echo $category->getTable()->getNodeOrdering($category->id, $category->parent_id); ?></span>
+										</td>
+										<td class="text-center">
+											<?php if ($category->status == 'publish'){ ?>
+												<button type="button" onclick="$('#record-<?php echo $category->id; ?>')[0].checked = true; $('#task').val('unpublish');$(this).closest('form').submit();" class="btn btn-default btn-xs active" data-toggle="tooltip" title="Click to set Unpublished">
+													<span class="glyphicon glyphicon-ok text-success"></span>
+												</button>
+											<?php }else{ ?>
+												<button type="button" onclick="$('#record-<?php echo $category->id; ?>')[0].checked = true; $('#task').val('publish');$(this).closest('form').submit();" class="btn btn-default btn-xs" data-toggle="tooltip" title="Click to set Published">
+													<span class="glyphicon glyphicon-remove text-danger"></span>
+												</button>
+											<?php } ?>
+										</td>
+										<td class="text-center">
+											<?php
+												if(($access = $category->getGroupAccess()) != null){
+													if($access == '*'){
+														echo '<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-plug-users"></span> All Groups</button>';
+													}else{
+														echo '<div class="btn-group">';
+														echo '<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-plug-users"></span> ' . count($access) . ' groups <span class="caret"></span></button>';
+														echo '<ul class="dropdown-menu text-left" role="menu">';
+														foreach ($access as $id => $group){
+															echo '<li><a href="' . $this->url(array('module' => 'users', 'controller'=>'groups', 'action'=>'edit', 'id' => $id)) . '">' . $group . '</a></li>';
+														}
+														echo '</ul>';
+														echo '</div>';
+													}
+												}
+											?>
+										</td>
+										<td class="text-center"><span class="badge"><?php echo $category->id; ?></span></td>
+									</tr>
+								<?php 
+							}
+							?>
+						</tbody>
+					</table>
+				</div>
+				<?php echo $this->paginator;?>
+			</div>
+		</div>
+	</div>
+	<input value="<?php echo $this->filter['order_by']; ?>" name="order_by" id="order_by" type="hidden"/>
+	<input value="<?php echo $this->filter['ordering']; ?>" name="ordering" id="ordering" type="hidden"/>
+	<input name="pre_order" id="pre_order" type="hidden"/>
+	<div class="modal fade" tabindex="-1" id="orderModal" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">Order Category <smal>Drag & Drop</h4>
+				</div>
+				<div class="modal-body">
+					<div class="dd">
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" onclick="$('#pre_order').val(window.JSON.stringify($('.dd').nestable('serialize'))); $('#task').val('order'); $(this).closest('form').submit();">Save Order</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				</div>		
+			</div>
+		</div>
+	</div>
+</form>
+

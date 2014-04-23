@@ -133,7 +133,7 @@ class Contents_CategoriesController extends Zend_Controller_Action
 				}elseif($task == 'edit.copy'){
 					
 				}else{
-					$this->_helper->_redirector->gotoSimple('edit', 'articles', 'categories', array('id' => $categoryId));
+					$this->_helper->_redirector->gotoSimple('edit', 'categories', 'contents', array('id' => $categoryId));
 				}
 			}
 		}
@@ -199,7 +199,7 @@ class Contents_CategoriesController extends Zend_Controller_Action
 				}elseif($task == 'edit.copy'){
 					
 				}else{
-					$this->_helper->_redirector->gotoSimple('edit', 'articles', 'categories', array('id' => $categoryId));
+					$this->_helper->_redirector->gotoSimple('edit', 'categories', 'contents', array('id' => $categoryId));
 				}
 			}
 		}

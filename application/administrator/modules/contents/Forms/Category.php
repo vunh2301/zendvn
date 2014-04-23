@@ -43,12 +43,11 @@ class Contents_Form_Category extends Zend_Form{
 		))->setDecorators(array(
 				'FormElements',
 				'Form'
-		));
+		))->setIsArray(true);
 		
 		
 		// Group Detail
 		$this->addElement('hidden', 'pre_order', array('decorators' => array('ViewHelper')));
-		$this->addElement('hidden', 'metadata', array('decorators' => array('ViewHelper')));
 		$this->addElement('hidden', 'created_user_id', array('decorators' => array('ViewHelper')));
 		$this->addElement('hidden', 'modified_user_id', array('decorators' => array('ViewHelper')));
 		

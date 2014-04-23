@@ -1,5 +1,5 @@
 <?php
-
+require_once APPLICATION_PATH . '/library/Wideimage/Wideimage.php';
 class Contents_Model_DbTable_Category extends Zendvn_Db_Table_NestedSet
 {
 	protected $_name		= 'categories';
@@ -59,46 +59,123 @@ class Contents_Model_DbTable_Category extends Zendvn_Db_Table_NestedSet
 	}
 	
 	public function deleteItem($id){
-		//
+		$acl = Zendvn_Factory::getAcl();
+		$tblResource = new Zendvn_Db_Table_AclResource();
+		$item = $this->find($id)->current();
+		
+		//Del articles of current cat
+		$this->_deleteArticles($catChild->id);
+		
+		// Remove current permission
+		$tblResource->removeNode($acl->get('contents.categories.' . $id)->getId());
+		
+		// Delete Image
+		if(is_file(PUBLISH_PATH . '/modules/contents/images/' . $item->image))unlink(PUBLISH_PATH . '/modules/contents/images/' . $item->image);
+		if(is_file(PUBLISH_PATH . '/modules/contents/images/thumbnails/' . $item->image))unlink(PUBLISH_PATH . '/modules/contents/images/thumbnails/' . $item->image);
+		
+		//Find and del articles + permission of childs Cat
+		$catChilds = $this->getChilds($id);
+		foreach($catChilds as $catChild){
+			// Remove article
+			$this->_deleteArticles($catChild->id);
+			
+			// Remove child permission
+			$tblResource->removeNode($acl->get('contents.categories.' . $catChild->id)->getId());
+			
+			// Delete Image
+			if(is_file(PUBLISH_PATH . '/modules/contents/images/' . $catChild->image))unlink(PUBLISH_PATH . '/modules/contents/images/' . $catChild->image);
+			if(is_file(PUBLISH_PATH . '/modules/contents/images/thumbnails/' . $catChild->image))unlink(PUBLISH_PATH . '/modules/contents/images/thumbnails/' . $catChild->image);
+			
+		}
+		
+		//Del Branch
+		$this->removeNode($id);
+	}
+
+	private function _deleteArticles($id){
+		// Delete All Articles
+		$tblArticle = new Contents_Model_DbTable_Article();
+		$articles = $tblArticle->getItems(array('category'=>$id));
+		foreach ($articles as $article){
+			$tblArticle->deleteItem($article->id);
+		}
 	}
 	
 	public function updateItem($id, $data){
 		$user = Zendvn_Factory::getUser();
-		if($data['alias'] == null) $data['alias'] = $this->createAlias($data['title']);
-		$data['modified_user_id'] = $user->id;
+		$data['modified_user_id'] 	= $user->id;
 		$date = new Zend_Date();
-		$data['modified_date'] = $date->setTimezone($this->_globalTimezone)->toString('YYYY-MM-dd HH:mm:ss');
-		$data['metadata'] = json_encode($data['metadata']);
+		$data['modified_date'] 		= $date->setTimezone($this->_globalTimezone)->toString('YYYY-MM-dd HH:mm:ss');
+		$data['metadata'] 			= json_encode($data['metadata']);
 	
-		unset($values['parent_id']);
-    	unset($values['pre_order']);
-    	unset($values['order']);
-    	unset($values['created_date']);
-    	unset($values['created_user']);
-    	unset($values['created_user_id']);
-    	unset($values['modified_date']);
-    	unset($values['modified_user']);
-    	unset($values['id']);
-    	
+		$parentId = $data['parent_id'];
+		$preOrder = $data['pre_order'];
+		unset($data['parent_id']);
+    	unset($data['pre_order']);
+    	unset($data['order']);
+    	unset($data['created_date']);
+    	unset($data['created_user']);
+    	unset($data['created_user_id']);
+    	unset($data['modified_user']);
+    	unset($data['hits']);
+    	unset($data['id']);
+
 		if($id > 0){
 			// Update Parent
-			$tblCategory->moveNode($id, 'right', $values['parent_id']);
+			$this->moveNode($id, 'right', $parentId);
 			// Update Order
-			if(($orderValues = $values['pre_order']) != null){
+			if($preOrder != null){
 				$orderValues = json_decode($orderValues, true);
 				foreach ($orderValues as $orderValue){
-					$this->moveNode($orderValue['id'], 'right', $values['parent_id']);
+					$this->moveNode($orderValue['id'], 'right', $parentId);
 				}
 			}
 			// Update Status
-			$this->updateBranch(array('status' => $values['status']), $id);
+			$this->updateBranch(array('status' => $data['status']), $id);
 			// Update category
-			$this->update($values, $this->_db->quoteInto('id = ?', $id));
+			$this->update($data, $this->_db->quoteInto('id = ?', $id));
+		}
+	}
+	
+	public function createItem($data){
+		$user = Zendvn_Factory::getUser();
+		$data['modified_user_id'] 	= $data['created_user_id'] = $user->id;
+		$date = new Zend_Date();
+		$data['modified_date'] 		= $data['created_date'] = $date->setTimezone($this->_globalTimezone)->toString('YYYY-MM-dd HH:mm:ss');
+		$data['metadata'] 			= json_encode($data['metadata']);
+	
+		$parentId = $data['parent_id'];
+		$preOrder = $data['pre_order'];
+		unset($data['parent_id']);
+		unset($data['pre_order']);
+		unset($data['order']);
+		unset($data['created_user']);
+		unset($data['modified_user']);
+		unset($data['id']);
+	
+		// Update Parent
+		$id = $this->insertNode($data, 'right', $parentId);
+		
+		if($id > 0){
+			// Update Order
+			if($preOrder != null){
+				$orderValues = json_decode($orderValues, true);
+				foreach ($orderValues as $orderValue){
+					$this->moveNode($orderValue['id'], 'right', $parentId);
+				}
+			}
+			// Update Status
+			$this->updateBranch(array('status' => $data['status']), $id);
 		}
 	}
 
-	public function getParents($category, $type = 'list'){
-		$items = $this->fetchAll($this->select()->where('lft < ' . $category->lft . ' OR lft > ' . $category->rgt)->order('lft'));
+	public function getParents($id = 0, $type = 'list'){
+		if($id > 0){
+			$node = $this->getNode($id);
+			$items = $this->fetchAll($this->select()->where('lft < ' . $node->lft . ' OR lft > ' . $node->rgt)->order('lft'));
+		}else{
+			$items = $this->fetchAll($this->select()->order('lft'));
+		}
 		if($type == 'rowset') return $items;
 		if($items->count() > 0){
 			foreach ($items as $item) $list[$item->id] = str_repeat('|—', $item->level) . ' ' . $item->title;
@@ -133,15 +210,27 @@ class Contents_Model_DbTable_Category extends Zendvn_Db_Table_NestedSet
 	}
 	
 	public function updateStatus(array $items, $status = 'publish'){
-		$items = $this->find($items);
-		if($items->count() > 0){
+		if(count($items) > 0){
 			foreach ($items as $item){
-				$item->status = $status;
-				$item->save();
+				$this->updateBranch(array('status' => $status), $item);
 			}
 		}
 	}
 
+	public function updateImage($imageName){
+		$imagePath = PUBLISH_PATH . '/modules/contents/images/';
+		$extension = pathinfo($imageName, PATHINFO_EXTENSION);
+		$filename = pathinfo($imageName, PATHINFO_FILENAME);
+		$imageName = $this->generateRandomString(10) . '_' .  $this->createAlias($filename) . '.' . $extension;
+		$filterRename = new Zend_Filter_File_Rename(array('target' => $imagePath . $imageName, 'overwrite' => true));
+		$filterRename->filter($imagePath . $filename . '.' . $extension);
+		$image = Wideimage::load($imagePath . $imageName);
+		$image = $image->resize(130, 130, 'outside');
+		$image = $image->crop('center', 'center', 130, 130);
+		$image->saveToFile($imagePath . 'thumbnails/' . $imageName);
+		return $imageName;
+	}
+	
 	public function generateRandomString($length = 50) {
 		$strings = '0123456789abcdefghijklmnopqrstuvwxyz';
 		$randomString = '';

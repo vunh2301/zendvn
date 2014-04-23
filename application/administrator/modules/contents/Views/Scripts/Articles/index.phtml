@@ -19,8 +19,8 @@
 							<button type="button" onclick="if(!$(this).closest('form').find('table :checked').first().val()){alert('Please first make a selection from the list!');return false;}else{$('#task').val('unpublish');$(this).closest('form').submit();};" class="btn btn-default btn-sm navbar-btn" <?php echo ($this->isAllow('contents', 'editState') == true ? '' : ' disabled')?>><span class="glyphicon glyphicon-remove text-danger"></span> Unpublish</button>			
 							<button type="button" onclick="if(!$(this).closest('form').find('table :checked').first().val()){alert('Please first make a selection from the list!');return false;}else{$('#task').val('featured');$(this).closest('form').submit();};" class="btn btn-default btn-sm navbar-btn" <?php echo ($this->isAllow('contents', 'editState') == true ? '' : ' disabled')?>><span class="glyphicon glyphicon-star text-primary"></span> Featured</button>
 							<button type="button" onclick="if(!$(this).closest('form').find('table :checked').first().val()){alert('Please first make a selection from the list!');return false;}else{$('#task').val('unfeatured');$(this).closest('form').submit();};" class="btn btn-default btn-sm navbar-btn" <?php echo ($this->isAllow('contents', 'editState') == true ? '' : ' disabled')?>><span class="glyphicon glyphicon-star-empty"></span> Unfeatured</button>			
+							<button type="button" onclick="if(!$(this).closest('form').find('table :checked').first().val()){alert('Please first make a selection from the list!');return false;}else{$('#task').val('trash');$(this).closest('form').submit();};" class="btn btn-default btn-sm navbar-btn"<?php echo ($this->isAllow('contents', 'editState') == true ? '' : ' disabled')?>><span class="glyphicon glyphicon-trash"></span> Trash</button>
 							<button type="button" onclick="if(!$(this).closest('form').find('table :checked').first().val()){alert('Please first make a selection from the list!');return false;}else{$('#task').val('delete');$(this).closest('form').submit();};" class="btn btn-default btn-sm btn-danger navbar-btn" <?php echo ($this->isAllow('contents', 'delete') == true ? '' : ' disabled')?>><span class="glyphicon glyphicon-remove-sign"></span> Delete</button>
-						
 					</ul>
 				</div>
 			</div>
@@ -131,9 +131,13 @@
 												<button type="button" onclick="$('#record-<?php echo $article->id; ?>')[0].checked = true; $('#task').val('unpublish');$(this).closest('form').submit();"  class="btn btn-default btn-xs active" data-toggle="tooltip" title="Click to set Unpublished"<?php echo ($this->isAllow('contents', 'editState') == true ? '' : ' disabled')?>>
 													<span class="glyphicon glyphicon-ok text-success"></span>
 												</button>
-											<?php }else{ ?>
+											<?php }else if ($article->status == 'unpublish'){ ?>
 												<button type="button" onclick="$('#record-<?php echo $article->id; ?>')[0].checked = true; $('#task').val('publish');$(this).closest('form').submit();" class="btn btn-default btn-xs" data-toggle="tooltip" title="Click to set Published"<?php echo ($this->isAllow('contents', 'editState') == true ? '' : ' disabled')?>>
 													<span class="glyphicon glyphicon-remove text-danger"></span>
+												</button>
+											<?php }else if ($article->status == 'trash'){ ?>
+												<button type="button" onclick="$('#record-<?php echo $article->id; ?>')[0].checked = true; $('#task').val('publish');$(this).closest('form').submit();" class="btn btn-default btn-xs" data-toggle="tooltip" title="Click to set Published"<?php echo ($this->isAllow('contents', 'editState') == true ? '' : ' disabled')?>>
+													<span class="glyphicon glyphicon-trash text-danger"></span>
 												</button>
 											<?php } ?>
 										</td>

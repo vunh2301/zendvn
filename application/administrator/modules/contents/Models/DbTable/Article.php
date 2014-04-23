@@ -2,7 +2,7 @@
 require_once APPLICATION_PATH . '/library/Wideimage/Wideimage.php';
 class Contents_Model_DbTable_Article extends Zendvn_Db_Table_Abstract
 {
-	protected  $_name		= 'articles';
+	protected $_name		= 'articles';
 	
 	protected $_rowsetClass = 'Contents_Model_DbTable_Rowset_Articles';
 	
@@ -24,7 +24,7 @@ class Contents_Model_DbTable_Article extends Zendvn_Db_Table_Abstract
 		// Remove permission
 		$acl = Zendvn_Factory::getAcl();
 		$resource_id = $acl->get('contents.articles.' . $id)->getId();
-		$tblResource = new Library_DbTable_AclResource();
+		$tblResource = new Zendvn_Db_Table_AclResource();
 		$tblResource->removeNode($resource_id);
 		// Delete Image
 		if(is_file(PUBLISH_PATH . '/modules/contents/images/' . $image))unlink(PUBLISH_PATH . '/modules/contents/images/' . $image);
@@ -40,27 +40,27 @@ class Contents_Model_DbTable_Article extends Zendvn_Db_Table_Abstract
 		->group('articles.id');
 
 		// Filter Search
-		if(null != $filter['search'])
+		if(isset($filter['search']) && null != $filter['search'])
 			$select->where('articles.title LIKE("%' . $filter['search'] . '%")');
 
 		// Filter Category
-		if($filter['category'] != '*')
+		if(isset($filter['category']) && $filter['category'] != '*')
 			$select->where('articles.category_id = ?', $filter['category']);
 		
 		// Filter Status
-		if($filter['status'] != '*')
+		if(isset($filter['status']) && $filter['status'] != '*')
 			$select->where('articles.status = ?', $filter['status']);
 		
 		// Filter Featured
-		if($filter['featured'] != '*')
+		if(isset($filter['featured']) && $filter['featured'] != '*')
 			$select->where('articles.featured = ?', (int)$filter['featured']);
 		
 		// Ordering
-		if(null !== $filter['ordering'] && null !== $filter['order_by'])
+		if(isset($filter['ordering']) && isset($filter['order_by']) && null !== $filter['ordering'] && null !== $filter['order_by'])
 			$select->order($filter['ordering'] . ' ' . $filter['order_by']);
 		
 		// Paging
-		if(null !== $filter['paginator'] && null !== $filter['paginator_per_page']){
+		if(isset($filter['paginator']) && isset($filter['paginator_per_page'])){
 			$adapter 	= new Zend_Paginator_Adapter_DbTableSelect($select);
 			$paginator 	= new Zend_Paginator($adapter);
 			$paginator->setCurrentPageNumber($filter['paginator'])->setItemCountPerPage($filter['paginator_per_page']);
@@ -85,7 +85,6 @@ class Contents_Model_DbTable_Article extends Zendvn_Db_Table_Abstract
 	
 	public function updateItem($id, $data){
 		$user = Zendvn_Factory::getUser();
-		if($data['alias'] == null) $data['alias'] = $this->createAlias($data['title']);
 		$data['modified_user_id'] = $user->id;
 		$date = new Zend_Date();
 		$data['modified_date'] = $date->setTimezone($this->_globalTimezone)->toString('YYYY-MM-dd HH:mm:ss');
@@ -116,9 +115,7 @@ class Contents_Model_DbTable_Article extends Zendvn_Db_Table_Abstract
 
 	public function createItem($data){
 		$user = Zendvn_Factory::getUser();
-		if($data['alias'] == null) $data['alias'] = $this->createAlias($data['title']);
-		$data['created_user_id'] = $data['modified_user_id'] = $user->id;
-		
+		$data['created_user_id'] = $data['modified_user_id'] = $user->id;		
 		$date = new Zend_Date();
 		$data['created_date'] = $data['modified_date'] = $date->setTimezone($this->_globalTimezone)->toString('YYYY-MM-dd HH:mm:ss');
 		
@@ -213,9 +210,7 @@ class Contents_Model_DbTable_Article extends Zendvn_Db_Table_Abstract
 		$image->saveToFile($imagePath . 'thumbnails/' . $imageName);
 		return $imageName;
 	}
-	
-	
-	
+
 	private function copyTitle($title){
 		$matches = array();
 		preg_match_all('/' . preg_quote(' (copy ', '/') . '(\d+)'. preg_quote(')', '/').'/i', $title, $matches);

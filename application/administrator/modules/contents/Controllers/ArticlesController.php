@@ -45,11 +45,11 @@ class Contents_ArticlesController extends Zendvn_Controller_Action
 			$this->_helper->_redirector->gotoSimple('create', 'articles', 'contents');
 		}elseif($task == 'edit' && ($this->view->chekeds = $this->_request->getParam('record', null)) != null){
 			$this->_helper->_redirector->gotoSimple('edit', 'articles', 'contents',array('id' => array_shift(array_values($this->view->chekeds))));
-		}elseif(($task == 'publish' || $task == 'unpublish') && ($this->view->chekeds = $this->_request->getParam('record', null)) != null){
+		}elseif(($task == 'publish' || $task == 'unpublish' || $task == 'trash') && ($this->view->chekeds = $this->_request->getParam('record', null)) != null){
 			$tblArticle->updateStatus($this->view->chekeds, $task);
 		}elseif(($task == 'featured' || $task == 'unfeatured') && ($this->view->chekeds = $this->_request->getParam('record', null)) != null){
 			$tblArticle->updateFeatured($this->view->chekeds, ($task == 'featured'));
-		}elseif($task == 'delete' && ($this->view->chekeds = $this->_request->getParam('record', null)) != null){			
+		}elseif($task == 'delete' && ($this->view->chekeds = $this->_request->getParam('record', null)) != null){	
 			foreach ($this->view->chekeds as $recordId){
 				$tblArticle->deleteItem($recordId);
 			}
@@ -75,7 +75,12 @@ class Contents_ArticlesController extends Zendvn_Controller_Action
 		
 		
 		if($this->_request->isPost()){
-			if($formArticle->isValid($this->_request->getPost())){
+			// Check alias after check validate
+			$post = $this->_request->getPost();
+			if($post['alias'] == null) $post['alias'] = $post['title'];
+			$post['alias'] = $tblArticle->createAlias($post['alias']);
+			// Check validate
+			if($formArticle->isValid($post)){
 				$values = array_shift(array_values($formArticle->getValues()));
 				// Upload Image
 				if ($formArticle->image->isUploaded()) {
@@ -140,7 +145,12 @@ class Contents_ArticlesController extends Zendvn_Controller_Action
 
 		
 		if($this->_request->isPost()){
-    		if($formArticle->isValid($this->_request->getPost())){
+			// Check alias after check validate
+			$post = $this->_request->getPost();
+			if($post['alias'] == null) $post['alias'] = $post['title'];
+			$post['alias'] = $tblArticle->createAlias($post['alias']);
+			// Check validate
+    		if($formArticle->isValid($post)){
     			$values = array_shift(array_values($formArticle->getValues()));
     			// Upload Image
     			if ($formArticle->image->isUploaded()) {

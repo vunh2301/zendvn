@@ -47,6 +47,15 @@ class Contents_CategoriesController extends Zend_Controller_Action
 			$this->_helper->_redirector->gotoSimple('edit', 'categories', 'contents',array('id' => array_shift(array_values($this->view->chekeds))));
 		}elseif(($task == 'publish' || $task == 'unpublish' || $task == 'trash') && ($this->view->chekeds = $this->_request->getParam('record', null)) != null){
 			$tblCategory->updateStatus($this->view->chekeds, $task);
+		}elseif($task == 'order' && ($orderValues = $this->_request->getParam('pre_order', null)) !== null){	
+			$orderValues = json_decode($orderValues, true);
+			$parentId = null;
+			foreach ($orderValues as $orderValue){
+				if(null === $parentId){
+					$parentId = $tblCategory->getNode($orderValue['id'])->parent_id;
+				}
+				$tblCategory->moveNode($orderValue['id'], 'right', $parentId);
+			}
 		}elseif($task == 'delete' && ($this->view->chekeds = $this->_request->getParam('record', null)) != null){
 			foreach ($this->view->chekeds as $recordId){
 				$tblCategory->deleteItem($recordId);
@@ -99,6 +108,8 @@ class Contents_CategoriesController extends Zend_Controller_Action
 					if(is_file($imagePath . $category->image))unlink($imagePath . $category->image);
 					if(is_file($imagePath . 'thumbnails/' .  $category->image))unlink($imagePath . 'thumbnails/' .  $category->image);
 					$values['image'] = $tblCategory->updateImage($values['image']);
+				}else{
+					unset($data['image']);
 				}
 
 				// Update
@@ -112,7 +123,18 @@ class Contents_CategoriesController extends Zend_Controller_Action
 						$tblResource->moveResource('contents.categories.' . $categoryId, 'contents');
 					}
 				}
-				$tblResource->updatePrivileges('contents.categories.' . $categoryId, (array)$this->_request->getParam('contentsCategories'));				 
+				$tblResource->updatePrivileges('contents.categories.' . $categoryId, (array)$this->_request->getParam('contentsCategories'));
+
+				// Process Task
+				if($task == 'edit.close'){
+					$this->_helper->_redirector->gotoSimple('index', 'categories', 'contents');
+				}elseif($task == 'edit.new'){
+					$this->_helper->_redirector->gotoSimple('create', 'categories', 'contents');
+				}elseif($task == 'edit.copy'){
+					
+				}else{
+					$this->_helper->_redirector->gotoSimple('edit', 'articles', 'categories', array('id' => $categoryId));
+				}
 			}
 		}
 		
@@ -167,9 +189,18 @@ class Contents_CategoriesController extends Zend_Controller_Action
     			}else{
     				$tblResource->addResource('contents.categories.' . $categoryId, $values['title'], 'contents');
     			}
-				$tblResource->updatePrivileges('contents.categories.' . $articleId, (array)$this->_request->getParam('contentsCategories'));
+				$tblResource->updatePrivileges('contents.categories.' . $categoryId, (array)$this->_request->getParam('contentsCategories'));
 
-				Zend_Debug::dump($values);
+				// Process Task
+				if($task == 'edit.close'){
+					$this->_helper->_redirector->gotoSimple('index', 'categories', 'contents');
+				}elseif($task == 'edit.new'){
+					$this->_helper->_redirector->gotoSimple('create', 'categories', 'contents');
+				}elseif($task == 'edit.copy'){
+					
+				}else{
+					$this->_helper->_redirector->gotoSimple('edit', 'articles', 'categories', array('id' => $categoryId));
+				}
 			}
 		}
 	

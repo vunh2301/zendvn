@@ -61,13 +61,10 @@ class Contents_Model_DbTable_Category extends Zendvn_Db_Table_NestedSet
 	public function deleteItem($id){
 		$acl = Zendvn_Factory::getAcl();
 		$tblResource = new Zendvn_Db_Table_AclResource();
-		$item = $this->find($id)->current();
+		if(($item = $this->find($id)->current()) === null)return false;
 		
 		//Del articles of current cat
-		$this->_deleteArticles($catChild->id);
-		
-		// Remove current permission
-		$tblResource->removeNode($acl->get('contents.categories.' . $id)->getId());
+		$this->_deleteArticles($item->id);
 		
 		// Delete Image
 		if(is_file(PUBLISH_PATH . '/modules/contents/images/' . $item->image))unlink(PUBLISH_PATH . '/modules/contents/images/' . $item->image);
@@ -79,14 +76,13 @@ class Contents_Model_DbTable_Category extends Zendvn_Db_Table_NestedSet
 			// Remove article
 			$this->_deleteArticles($catChild->id);
 			
-			// Remove child permission
-			$tblResource->removeNode($acl->get('contents.categories.' . $catChild->id)->getId());
-			
 			// Delete Image
 			if(is_file(PUBLISH_PATH . '/modules/contents/images/' . $catChild->image))unlink(PUBLISH_PATH . '/modules/contents/images/' . $catChild->image);
 			if(is_file(PUBLISH_PATH . '/modules/contents/images/thumbnails/' . $catChild->image))unlink(PUBLISH_PATH . '/modules/contents/images/thumbnails/' . $catChild->image);
 			
 		}
+		// Remove current permission
+		$tblResource->removeNode($acl->get('contents.categories.' . $id)->getId());
 		
 		//Del Branch
 		$this->removeNode($id);
@@ -155,7 +151,7 @@ class Contents_Model_DbTable_Category extends Zendvn_Db_Table_NestedSet
 	
 		// Update Parent
 		$id = $this->insertNode($data, 'right', $parentId);
-		
+		var_dump($id);
 		if($id > 0){
 			// Update Order
 			if($preOrder != null){
@@ -167,6 +163,7 @@ class Contents_Model_DbTable_Category extends Zendvn_Db_Table_NestedSet
 			// Update Status
 			$this->updateBranch(array('status' => $data['status']), $id);
 		}
+		return $id;
 	}
 
 	public function getParents($id = 0, $type = 'list'){

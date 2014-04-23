@@ -1,5 +1,5 @@
 <?php
-class Contents_Model_DbTable_Row_Category extends Zend_Db_Table_Row_Abstract
+class Contents_Model_DbTable_Row_Category extends Zendvn_Db_Table_Row_Abstract
 {
 	private $_userTimezone;
 	
@@ -53,7 +53,7 @@ class Contents_Model_DbTable_Row_Category extends Zend_Db_Table_Row_Abstract
 		$groups = array();
 		$all = true;
 		foreach($roles as $role){
-			if($acl->isAllowed($role,'contents.articles.' . $this->id, 'access')){
+			if($acl->isAllowed($role,'contents.categories.' . $this->id, 'access')){
 				$groups[str_replace('group_', '', $role)] = $acl->getRole($role)->getRoleName();
 			}else{
 				$all = false;

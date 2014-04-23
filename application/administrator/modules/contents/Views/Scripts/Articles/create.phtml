@@ -29,9 +29,9 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="row">
-							<div class="col-md-8"><?php echo $this->formArticle->title;?></div>
+							<div class="col-md-8"><?php echo $this->form->title;?></div>
 							<div class="col-md-4">
- 								<?php echo $this->formArticle->alias;?>
+ 								<?php echo $this->form->alias;?>
 							</div>
 						</div>
 					</div>
@@ -49,20 +49,20 @@
 							<div class="tab-pane active" id="category">
 								<div class="row" style="margin-top:20px;">
 									<div class="col-md-9">
-										<?php echo $this->formArticle->text;?>
+										<?php echo $this->form->text;?>
 									</div>
 									<div class="col-md-3">
-										<?php echo $this->formArticle->category;?>
+										<?php echo $this->form->category;?>
 									</div>
 								</div>
 							</div>
 							<div class="tab-pane form-horizontal" id="options">
 								<div class="row" style="margin-top:20px;">
 									<div class="col-md-6">
-										<?php echo $this->formArticle->publish;?>
+										<?php echo $this->form->publish;?>
 									</div>
 									<div class="col-md-6">
-										<?php echo $this->formArticle->seo;?>
+										<?php echo $this->form->seo;?>
 									</div>
 								</div>
 							</div>
@@ -82,5 +82,5 @@
 			</div>
 		</div>
 	</div>
-	<?php echo $this->formArticle->hidden;?>
+	<?php echo $this->form->hidden;?>
 </form>

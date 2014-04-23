@@ -156,17 +156,9 @@ class Contents_Form_Article extends Zend_Form{
 				)
 		));
 
-		//Select Category
-		$tblCategory = new Contents_Model_DbTable_Category();
-		$rowsetSelectCategory = $tblCategory->fetchAll($tblCategory->select()->where('lft > 0'));
-		if($rowsetSelectCategory->count() > 0){
-			foreach ($rowsetSelectCategory as $rowSelectCategory) $select_category[$rowSelectCategory->id] = str_repeat('|— ', $rowSelectCategory->level - 1) . $rowSelectCategory->title;
-		}
-		
 		$this->addElement('select', 'category_id', array(
 				'label' => 'Category: ',
 				'class' => 'form-control input-sm',
-				'multiOptions' => (array)$select_category,
 				'decorators' => array(
 						'ViewHelper',
 						array(array('warp'=>'HtmlTag'), array('tag'=>'div')),

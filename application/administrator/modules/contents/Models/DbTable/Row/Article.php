@@ -1,5 +1,5 @@
 <?php
-class Contents_Model_DbTable_Row_Article extends Zend_Db_Table_Row_Abstract
+class Contents_Model_DbTable_Row_Article extends Zendvn_Db_Table_Row_Abstract
 {
 	private $_userTimezone;
 	

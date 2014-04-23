@@ -65,13 +65,16 @@ class Contents_ArticlesController extends Zendvn_Controller_Action
 		// Data Table
 		$tblResource 	= new Zendvn_Db_Table_AclResource();
 		$tblArticle 	= new Contents_Model_DbTable_Article();
-		$formArticle 	= new Contents_Form_Article();
+		$selectCat		= $tblArticle->getCategories();
+		$form 			= new Contents_Form_Article();
+		
+		$form->category_id->setMultiOptions($selectCat);
 		
 		$categoryId = $this->_request->getPost('category_id');
 		//Add Alias Validate
 		$validateAlias = new Zend_Validate_Db_NoRecordExists(array('table' => 'articles','field' => 'alias'));
 		$validateAlias->setSelect($validateAlias->getSelect()->where('category_id = ?', $categoryId));
-		$formArticle->alias->addValidator($validateAlias);
+		$form->alias->addValidator($validateAlias);
 		
 		
 		if($this->_request->isPost()){
@@ -80,11 +83,11 @@ class Contents_ArticlesController extends Zendvn_Controller_Action
 			if($post['alias'] == null) $post['alias'] = $post['title'];
 			$post['alias'] = $tblArticle->createAlias($post['alias']);
 			// Check validate
-			if($formArticle->isValid($post)){
-				$values = array_shift(array_values($formArticle->getValues()));
+			if($form->isValid($post)){
+				$values = array_shift(array_values($form->getValues()));
 				// Upload Image
-				if ($formArticle->image->isUploaded()) {
-					$formArticle->image->setAttrib('src', '/modules/contents/images/thumbnails/' . $tblArticle->updateImage($values['image']));
+				if ($form->image->isUploaded()) {
+					$values['image'] = $tblArticle->updateImage($values['image']);
 				}else{
 					unset($values['image']);
 				}
@@ -115,7 +118,7 @@ class Contents_ArticlesController extends Zendvn_Controller_Action
 				}
 			}
 		}
-		$this->view->formArticle = $formArticle;
+		$this->view->form = $form;
 		$this->view->permission = Zendvn_Factory::getAcl()->getForm('contents', 'contents.articles', 'contentsCategories', false);
 		
 	}
@@ -129,11 +132,15 @@ class Contents_ArticlesController extends Zendvn_Controller_Action
 		// Data Table
 		$tblResource 	= new Zendvn_Db_Table_AclResource();
 		$tblArticle 	= new Contents_Model_DbTable_Article();
-		$formArticle 	= new Contents_Form_Article();
-		$article = $tblArticle->getItem($articleId);
-		$formArticle->populate($article->toArray());
+		$form 			= new Contents_Form_Article();
+		$article 		= $tblArticle->getItem($articleId);
+		$selectCat		= $tblArticle->getCategories();
 		
-		if($article->image)$formArticle->image->setAttrib('src', $this->view->baseUrl('/modules/contents/images/thumbnails/' . $article->image));
+		$form->populate($article->toArray());
+		
+		$form->category_id->setMultiOptions($selectCat);
+		
+		if($article->image)$form->image->setAttrib('src', $this->view->baseUrl('/modules/contents/images/thumbnails/' . $article->image));
 		$categoryId = $this->_request->getPost('category_id', $article->category_id);
 		//Add Alias Validate
 		$validateAlias = new Zend_Validate_Db_NoRecordExists(array('table' => 'articles','field' => 'alias', 'exclude' => array(
@@ -141,7 +148,7 @@ class Contents_ArticlesController extends Zendvn_Controller_Action
 				'value' => $articleId
 		)));
 		$validateAlias->setSelect($validateAlias->getSelect()->where('category_id = ?', $categoryId));
-		$formArticle->alias->addValidator($validateAlias);
+		$form->alias->addValidator($validateAlias);
 
 		
 		if($this->_request->isPost()){
@@ -150,10 +157,10 @@ class Contents_ArticlesController extends Zendvn_Controller_Action
 			if($post['alias'] == null) $post['alias'] = $post['title'];
 			$post['alias'] = $tblArticle->createAlias($post['alias']);
 			// Check validate
-    		if($formArticle->isValid($post)){
-    			$values = array_shift(array_values($formArticle->getValues()));
+    		if($form->isValid($post)){
+    			$values = array_shift(array_values($form->getValues()));
     			// Upload Image
-    			if ($formArticle->image->isUploaded()) {
+    			if ($form->image->isUploaded()) {
     				$imagePath = PUBLISH_PATH . '/modules/contents/images/';
     				if(is_file($imagePath . $article->image))unlink($imagePath . $article->image);
     				if(is_file($imagePath . 'thumbnails/' .  $article->image))unlink($imagePath . 'thumbnails/' .  $article->image); 				
@@ -188,7 +195,7 @@ class Contents_ArticlesController extends Zendvn_Controller_Action
 				}
 			}
 		}
-		$this->view->formArticle = $formArticle;
+		$this->view->form = $form;
 		$this->view->permission = Zendvn_Factory::getAcl()->getForm('contents.articles.' . $articleId, 'contents.articles', 'contentsArticles');
 	}
 

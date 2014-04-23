@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<administration>
+		<nav position="root">
+			<users>
+	            <label>Users</label>
+	            <type>Zend_Navigation_Page_Uri</type>
+	            <privilege>manager</privilege>
+	            <resource>users</resource>
+	            <uri>#</uri>
+	            <pages>
+	            	<user-manager>
+			            <label>User Manager</label>
+			            <type>Zendvn_Navigation_Page</type>
+			            <module>users</module>
+			            <controller>users</controller>
+			        </user-manager>
+			        <group-manager>
+			            <label>Group Manager</label>
+			            <type>Zendvn_Navigation_Page</type>
+			            <module>users</module>
+			            <controller>groups</controller>
+			        </group-manager>
+			        <user-divider>
+			            <uri></uri>
+			            <class>divider</class>
+			        </user-divider>
+			        <user-option>
+			            <label>Option</label>
+			            <type>Zendvn_Navigation_Page</type>
+			            <module>users</module>
+			            <controller>options</controller>
+			        </user-option>
+	            </pages>
+	        </users>
+		</nav>
+		<quickicon>
+		 		<user-manager>
+		 		 		<label></label>
+		 		 		<icon></icon>
+		 		 		<uri></uri>
+		 		</user-manager>
+		</quickicon>
+	</administration>
+</config>

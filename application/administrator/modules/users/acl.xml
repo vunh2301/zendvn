@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<users>
+		<access 	title="Access"		description=""/>
+		<manager 	title="Manager"		description=""/>
+		<create 	title="Create"		description=""/>
+		<edit 		title="Edit"		description=""/>
+		<editOwn 	title="Edit Owner"	description=""/>
+		<editState	title="Edit State"	description=""/>
+		<delete 	title="Delete"		description=""/>
+	</users>
+</config>
+

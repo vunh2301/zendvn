@@ -7,7 +7,7 @@ class Zendvn_Factory{
 	
 	// Get Location
 	public function getLocation(){
-		return Zend_Registry::get('Zenvn_Location');
+		return Zend_Registry::get('Zendvn_Location');
 	}
 	
 	// Get Current User
@@ -24,25 +24,24 @@ class Zendvn_Factory{
 	}
 	
 	public function getWidgets(){
-		if(!Zend_Registry::isRegistered('WIDGETS')){
+		if(!Zend_Registry::isRegistered('Zendvn_widgets')){
 			$tblWidget = new Zendvn_Db_Table_Widget();
-			$widget = $tblWidget->getItems(Zend_Registry::get('Zenvn_Location'));
-			Zend_Registry::set('WIDGETS', $widget);
+			$widget = $tblWidget->getItems(Zend_Registry::get('Zendvn_Location'));
+			Zend_Registry::set('Zendvn_widgets', $widget);
 		}
-		return Zend_Registry::get('WIDGETS');
+		return Zend_Registry::get('Zendvn_widgets');
 	}
 	
 	public function getNavigation($menuTypeId = 0){
-		if(Zend_Registry::get('Zenvn_Location') == 'admin'){
+		if(Zend_Registry::get('Zendvn_Location') == 'admin'){
 			if(Zend_Registry::isRegistered('Admin_Navigation_Container') == false){
 				$container 		= new Zend_Navigation();
 				$tblExtension 	= new Zendvn_Db_Table_Extension();
 				$extensions 	= $tblExtension->getModules();
 				if($extensions != null){
 					foreach ($extensions as $extension){
-						$moduleInfoPath = APPLICATION_PATH . '/administrator/modules/' . $extension->name.'/info.xml';
-						if (file_exists($moduleInfoPath)) {
-							$configModuleInfo = new Zend_Config_Xml($moduleInfoPath, null, array('skipExtends' => true,'allowModifications' => true));
+						$moduleInfoPath = APPLICATION_PATH . '/administrator/modules/' . $extension->name.'/info';
+						if (($configModuleInfo = Zendvn_Config::factory($moduleInfoPath, null, array('skipExtends' => true,'allowModifications' => true))) !== null) {
 							if($configModuleInfo->administration->nav != null && $configModuleInfo->administration->nav->position == 'root'){
 								unset($configModuleInfo->administration->nav->position);
 								foreach ($configModuleInfo->administration->nav as $menu){
@@ -55,9 +54,8 @@ class Zendvn_Factory{
 					
 				if($extensions != null){
 					foreach ($extensions as $extension){
-						$moduleInfoPath = APPLICATION_PATH . '/administrator/modules/' . $extension->name.'/info.xml';
-						if (file_exists($moduleInfoPath)) {
-							$configModuleInfo = new Zend_Config_Xml($moduleInfoPath, null, array('skipExtends' => true,'allowModifications' => true));
+						$moduleInfoPath = APPLICATION_PATH . '/administrator/modules/' . $extension->name.'/info';
+						if (($configModuleInfo = Zendvn_Config::factory($moduleInfoPath, null, array('skipExtends' => true,'allowModifications' => true))) !== null) {
 							if($configModuleInfo->administration->nav != null && $configModuleInfo->administration->nav->position != 'root'){
 								$parentPage = $container->findBy('id', $configModuleInfo->administration->nav->position);
 								unset($configModuleInfo->administration->nav->position);

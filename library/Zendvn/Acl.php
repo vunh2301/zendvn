@@ -119,7 +119,11 @@ class Zendvn_Acl extends Zend_Acl {
     	//Add roles guest
     	$this->allow('group_1', 'root', 'access');
     	
+    	//Add roles user
+    	$this->allow('group_2', 'root', 'access');
+    	
     	//Add roles manager
+    	$this->allow('group_3', 'root', 'access');
     	$this->allow('group_3', 'root', 'admin');
     	$this->allow('group_3', 'root', 'create');
     	$this->allow('group_3', 'root', 'editOwn');
@@ -198,7 +202,6 @@ class Zendvn_Acl extends Zend_Acl {
     									'allow' => 'Allowed',
     									'deny' => 'Denied'
     							),
-    							'onChange' => "if($(this).val() == 'allow'){\$(this).parent().parent().parent().next().html('<span class=\"text-success\"><span class=\"glyphicon glyphicon-ok\"></span> Allowed</span>');}else if($(this).val() == 'deny'){\$(this).parent().parent().parent().next().html('<span class=\"text-danger\"><span class=\"glyphicon glyphicon-minus-sign\"></span> Denied</span>');}else{\$(this).parent().parent().parent().next().html('" . $calculator . "');};",
     							'label_class' => 'btn btn-default btn-xs',
     							'separator'   => '',
     							'decorators' =>  array(

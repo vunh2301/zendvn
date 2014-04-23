@@ -12,5 +12,15 @@ class Zendvn_Db_Table_User extends Zendvn_Db_Table_Abstract{
 		}
 		return $item;
 	}
+	
+	public function getGroups($id){
+		$tblGroup = new Zendvn_Db_Table_Group();
+		return $tblGroup->fetchAll($tblGroup->select()->setIntegrityCheck(false)
+				->from('groups')
+				->joinLeft(array('ug' => 'user_group'), 'groups.id = ug.group_id', array('user_id'))
+				->where('ug.user_id = ?', $id)
+				->group('groups.id')
+		);
+	}
 }
 ?>

@@ -40,8 +40,8 @@ class Zendvn_User extends Zendvn_Object_Abstract{
 	
 	public function getGroups(){
 		if(false === isset($this->_properties['groups'])){
-			$tblGroup = new Zendvn_Db_Table_Group();
-			$this->_properties['groups'] = $tblGroup->getItems();
+			$tblUser = new Zendvn_Db_Table_User();
+			$this->_properties['groups'] = $tblUser->getGroups($this->id);
 		}
 		return $this->_properties['groups'];
 	}

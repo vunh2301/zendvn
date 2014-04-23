@@ -36,6 +36,11 @@ class Zendvn_Db_Table_NestedSet extends Zend_Db_Table_Abstract
 		$this->_db->update($this->_name, $data, '(lft >= ' . $nodeUpdate->lft . ' AND rgt <= ' . $nodeUpdate->rgt . ')');
 	}
 	
+	public function getChilds($id){
+		$nodeUpdate 	=  $this->getNode($id);
+		return $this->fetchAll('(lft > ' . $nodeUpdate->lft . ' AND rgt < ' . $nodeUpdate->rgt . ')');
+	}
+	
 	public function getNodeOrdering($id, $parentId){
 		if(!isset($this->_ordering[$parentId])){
 			$orderList = $this->fetchAll($this->select()->where('parent_id = ?', $parentId)->order('lft'));

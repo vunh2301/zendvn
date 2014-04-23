@@ -78,7 +78,7 @@ class Contents_ArticlesController extends Zendvn_Controller_Action
 		
 		
 		if($this->_request->isPost()){
-			// Check alias after check validate
+			// Check alias
 			$post = $this->_request->getPost();
 			if($post['alias'] == null) $post['alias'] = $post['title'];
 			$post['alias'] = $tblArticle->createAlias($post['alias']);

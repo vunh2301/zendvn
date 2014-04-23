@@ -95,7 +95,9 @@
 										<?php if($category->hasRule()){ ?>
 											<span class="glyphicon glyphicon-warning-sign text-warning pull-right" data-toggle="tooltip" title="Has set permission setting"></span>
 										<?php } ?>										
-										<?php if(
+										<?php 
+										$user = Zendvn_Factory::getUser();
+										if(
 												$this->isAllow('contents.categories.' . $category->id, 'edit') ||
 												($this->isAllow('contents', 'editOwn') && $category->created_user_id == $user->id)
 										){?>

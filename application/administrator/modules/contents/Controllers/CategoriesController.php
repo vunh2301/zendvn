@@ -109,7 +109,7 @@ class Contents_CategoriesController extends Zend_Controller_Action
 					if(is_file($imagePath . 'thumbnails/' .  $category->image))unlink($imagePath . 'thumbnails/' .  $category->image);
 					$values['image'] = $tblCategory->updateImage($values['image']);
 				}else{
-					unset($data['image']);
+					unset($values['image']);
 				}
 
 				// Update
@@ -131,7 +131,15 @@ class Contents_CategoriesController extends Zend_Controller_Action
 				}elseif($task == 'edit.new'){
 					$this->_helper->_redirector->gotoSimple('create', 'categories', 'contents');
 				}elseif($task == 'edit.copy'){
-					
+					$categoryId = $tblCategory->copyItem($categoryId);
+					// Update Permission
+					if($parentId > 1){
+	    				$tblResource->addResource('contents.categories.' . $categoryId, $values['title'], 'contents.categories.' . $parentId);
+	    			}else{
+	    				$tblResource->addResource('contents.categories.' . $categoryId, $values['title'], 'contents');
+	    			}
+					$tblResource->updatePrivileges('contents.categories.' . $categoryId, (array)$this->_request->getParam('contentsCategories'));
+					$this->_helper->_redirector->gotoSimple('edit', 'categories', 'contents', array('id' => $categoryId));
 				}else{
 					$this->_helper->_redirector->gotoSimple('edit', 'categories', 'contents', array('id' => $categoryId));
 				}
@@ -177,6 +185,8 @@ class Contents_CategoriesController extends Zend_Controller_Action
 				if ($form->image->isUploaded()) {
 					$imagePath = PUBLISH_PATH . '/modules/contents/images/';
 					$values['image'] = $tblCategory->updateImage($values['image']);
+				}else{
+					unset($values['image']);
 				}
 				$parentId = $values['parent_id'];
 				
@@ -197,7 +207,15 @@ class Contents_CategoriesController extends Zend_Controller_Action
 				}elseif($task == 'edit.new'){
 					$this->_helper->_redirector->gotoSimple('create', 'categories', 'contents');
 				}elseif($task == 'edit.copy'){
-					
+					$categoryId = $tblCategory->copyItem($categoryId);
+					// Update Permission
+					if($parentId > 1){
+						$tblResource->addResource('contents.categories.' . $categoryId, $values['title'], 'contents.categories.' . $parentId);
+					}else{
+						$tblResource->addResource('contents.categories.' . $categoryId, $values['title'], 'contents');
+					}
+					$tblResource->updatePrivileges('contents.categories.' . $categoryId, (array)$this->_request->getParam('contentsCategories'));
+					$this->_helper->_redirector->gotoSimple('edit', 'categories', 'contents', array('id' => $categoryId));
 				}else{
 					$this->_helper->_redirector->gotoSimple('edit', 'categories', 'contents', array('id' => $categoryId));
 				}

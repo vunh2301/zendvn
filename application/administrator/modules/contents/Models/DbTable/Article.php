@@ -88,8 +88,13 @@ class Contents_Model_DbTable_Article extends Zendvn_Db_Table_Abstract
 		$data['modified_user_id'] = $user->id;
 		$date = new Zend_Date();
 		$data['modified_date'] = $date->setTimezone($this->_globalTimezone)->toString('YYYY-MM-dd HH:mm:ss');
-		$date = new Zend_Date($data['publish_date_start']);
-		$data['publish_date_start'] = $date->setTimezone($this->_globalTimezone)->toString('YYYY-MM-dd HH:mm:ss');
+		if($data['publish_date_start'] != null){
+			$date = new Zend_Date($data['publish_date_start']);
+			$data['publish_date_start'] = $date->setTimezone($this->_globalTimezone)->toString('YYYY-MM-dd HH:mm:ss');
+		}else{
+			$data['publish_date_start'] = '0000-00-00 00:00:00';
+		}
+		
 		if($data['publish_date_end'] != null){
 			$date = new Zend_Date($data['publish_date_end']);
 			$data['publish_date_end'] = $date->setTimezone($this->_globalTimezone)->toString('YYYY-MM-dd HH:mm:ss');
@@ -153,7 +158,7 @@ class Contents_Model_DbTable_Article extends Zendvn_Db_Table_Abstract
 			unset($data['id']);
 			$data['title'] = $this->copyTitle($data['title']);
 			$data['alias'] = $this->copyAlias($data['alias']);
-			$data['image'] = $this->copyImage($data['image']);
+			if($data['image'])$data['image'] = $this->copyImage($data['image']);
 			// Update create and modify
 			$data['created_user_id'] = $data['modified_user_id'] = $user->id;
 			$date = new Zend_Date();

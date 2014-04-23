@@ -151,7 +151,6 @@ class Contents_Model_DbTable_Category extends Zendvn_Db_Table_NestedSet
 	
 		// Update Parent
 		$id = $this->insertNode($data, 'right', $parentId);
-		var_dump($id);
 		if($id > 0){
 			// Update Order
 			if($preOrder != null){
@@ -166,6 +165,26 @@ class Contents_Model_DbTable_Category extends Zendvn_Db_Table_NestedSet
 		return $id;
 	}
 
+	public function copyItem($id){
+		$user = Zendvn_Factory::getUser();
+		$item = $this->find($id)->current();
+		if($item){
+			$data = $item->toArray();
+			unset($data['id']);
+			$data['title'] = $this->copyTitle($data['title']);
+			$data['alias'] = $this->copyAlias($data['alias']);
+			if($data['image'])$data['image'] = $this->copyImage($data['image']);
+			// Update create and modify
+			$data['created_user_id'] = $data['modified_user_id'] = $user->id;
+			$date = new Zend_Date();
+			$data['created_date'] = $data['modified_date'] = $date->setTimezone($this->_globalTimezone)->toString('YYYY-MM-dd HH:mm:ss');
+			// Reset Hits
+			$data['hits'] = 0;
+			$id = $this->insertNode($data, 'after', $id);
+			return $id;
+		}
+	}
+	
 	public function getParents($id = 0, $type = 'list'){
 		if($id > 0){
 			$node = $this->getNode($id);
@@ -228,6 +247,34 @@ class Contents_Model_DbTable_Category extends Zendvn_Db_Table_NestedSet
 		return $imageName;
 	}
 	
+	private function copyTitle($title){
+		$matches = array();
+		preg_match_all('/' . preg_quote(' (copy ', '/') . '(\d+)'. preg_quote(')', '/').'/i', $title, $matches);
+		if($matches[1] != null){
+			$title = str_replace($matches[0][0],	' (copy ' . ((integer)$matches[1][0] + 1) . ')', $title);
+		}else{
+			$title = $title . ' (copy 1)';
+		}
+		return $title;
+	}
+	private function copyAlias($alias){
+		$matches = array();
+		preg_match_all('/' . preg_quote('-', '/') . '(\d+)/i', $alias, $matches);
+		if($matches[1] != null){
+			$alias = str_replace($matches[0][0],	'-' . ((integer)$matches[1][0] + 1), $alias);
+		}else{
+			$alias = $alias . '-1';
+		}
+		return $alias;
+	}
+	private function copyImage($image){
+		$realName = explode("_", $image);
+		$realName = str_replace($realName[0], '', $image);
+		$newImage = $this->generateRandomString(10) . '_' .  $this->createAlias(pathinfo($realName, PATHINFO_FILENAME)) . '.' . pathinfo($realName, PATHINFO_EXTENSION);
+		copy(PUBLISH_PATH . '/modules/contents/images/' . $image, PUBLISH_PATH . '/modules/contents/images/' . $newImage);
+		copy(PUBLISH_PATH . '/modules/contents/images/thumbnails/' . $image, PUBLISH_PATH . '/modules/contents/images/thumbnails/' . $newImage);
+		return $newImage;
+	}
 	public function generateRandomString($length = 50) {
 		$strings = '0123456789abcdefghijklmnopqrstuvwxyz';
 		$randomString = '';

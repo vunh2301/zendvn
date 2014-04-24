@@ -29,30 +29,30 @@ class Users_Model_DbTable_User extends Zendvn_Db_Table_Abstract
  		$select = $this->select();
 
  		// Filter Search
- 		if(null != $filter['search'])
+ 		if(isset($filter['search']) && null != $filter['search'])
  			$select->where('real_name LIKE("%' . $filter['search'] . '%")');
  	
  		// Filter State
- 		if($filter['state'] != '*')
+ 		if(isset($filter['state']) && $filter['state'] != '*')
  			$select->where('block = ?', $filter['state']);
  	
  		// Filter Status
- 		if($filter['status'] != '*')
+ 		if(isset($filter['status']) && $filter['status'] != '*')
  			$select->where('active = ?', $filter['status']);
  	
  		// Filter Group
- 		if($filter['group'] != '*')
+ 		if(isset($filter['group']) && $filter['group'] != '*')
  			$select->setIntegrityCheck(false)
 			->from('users')
 			->joinleft('user_group', 'users.id = user_group.user_id', array('group_id'))
 			->where('user_group.group_id = ?', $filter['group']);
  	
  		// Ordering
- 		if(null !== $filter['ordering'] && null !== $filter['order_by'])
+ 		if(isset($filter['ordering']) && isset($filter['order_by']) && null !== $filter['ordering'] && null !== $filter['order_by'])
  			$select->order($filter['ordering'] . ' ' . $filter['order_by']);
  	
  		// Paging
- 		if(null !== $filter['paginator'] && null !== $filter['paginator_per_page']){
+ 		if(isset($filter['paginator']) && isset($filter['paginator_per_page'])){
  			$adapter 	= new Zend_Paginator_Adapter_DbTableSelect($select);
  			$paginator 	= new Zend_Paginator($adapter);
  			$paginator->setCurrentPageNumber($filter['paginator'])->setItemCountPerPage($filter['paginator_per_page']);

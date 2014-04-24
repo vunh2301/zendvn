@@ -15,19 +15,19 @@ class Users_Model_DbTable_Group extends Zendvn_Db_Table_NestedSet
 		->group('groups.id');
 	
 		// Filter Search
-		if(null != $filter['search'])
+		if(isset($filter['search']) && null != $filter['search'])
 			$select->where('groups.title LIKE("%' . $filter['search'] . '%")');
 	
 		// Filter State
-		if($filter['state'] != '*')
+		if(isset($filter['state']) && $filter['state'] != '*')
 			$select->where('groups.protected = ?', $filter['state']);
 	
 		// Ordering
-		if(null !== $filter['ordering'] && null !== $filter['order_by'])
+		if(isset($filter['ordering']) && isset($filter['order_by']) && null !== $filter['ordering'] && null !== $filter['order_by'])
 			$select->order($filter['ordering'] . ' ' . $filter['order_by']);
 	
 		// Paging
-		if(null !== $filter['paginator'] && null !== $filter['paginator_per_page']){
+		if(isset($filter['paginator']) && isset($filter['paginator_per_page'])){
 			$adapter 	= new Zend_Paginator_Adapter_DbTableSelect($select);
 			$paginator 	= new Zend_Paginator($adapter);
 			$paginator->setCurrentPageNumber($filter['paginator'])->setItemCountPerPage($filter['paginator_per_page']);
@@ -68,6 +68,10 @@ class Users_Model_DbTable_Group extends Zendvn_Db_Table_NestedSet
 			// Update Parent
 			$this->moveNode($id, 'right', $parentId);
 			$this->update($data, $this->_db->quoteInto('id = ?', $id));
+			
+			// Update role
+			$acl = Zendvn_Factory::getAcl();
+			$acl->moveRole('group_' . $id, 'group_' . $parentId);
 		}
 	}
 	

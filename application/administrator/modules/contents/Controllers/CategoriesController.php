@@ -80,7 +80,7 @@ class Contents_CategoriesController extends Zend_Controller_Action
 		$parentId = $this->_request->getPost('parent_id', $category->parent_id);
 		
 		$form->parent_id->setMultiOptions($tblCategory->getParents());
-		// Disable curent category and childs
+		// Disable current category and childs
 		$childs = $tblCategory->getChilds($categoryId);
 		$disableOptions = array();
 		if($childs->count() > 0)foreach ($childs as $child)$disableOptions[] = $child->id;

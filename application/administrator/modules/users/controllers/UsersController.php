@@ -22,7 +22,7 @@ class Users_UsersController extends Zendvn_Controller_Action
 	}
 	
     public function indexAction()
-    {   
+    {      	
     	// Other Task
     	$this->taskAction();
     	

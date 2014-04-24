@@ -43,6 +43,7 @@ class Zendvn_Acl extends Zend_Acl {
 	}
 	
 	public function __construct() {
+		$this->_roleRegistry = new Zendvn_Acl_Role_Registry();		
 		$this->_loadRoles();
 		$this->_loadResources();
 		$this->_loadDefaultResource();
@@ -256,6 +257,6 @@ class Zendvn_Acl extends Zend_Acl {
     }
     
     public function moveRole($role, $parent){
-    	
+    	return $this->_getRoleRegistry()->moveRole($role, $parent);
     }
 }

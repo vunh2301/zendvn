@@ -42,7 +42,7 @@ class Users_GroupsController extends Zendvn_Controller_Action
     	}elseif($task == 'edit' && ($this->view->chekeds = $this->_request->getParam('record', null)) != null){
     		$this->_helper->_redirector->gotoSimple('edit', 'groups', 'users',array('id' => array_shift(array_values($this->view->chekeds))));
     	}elseif($task == 'delete' && ($this->view->chekeds = $this->_request->getParam('record', null)) != null){
-    		$tblUser->deleteItems($this->view->chekeds);
+    		$tblGroup->deleteItems($this->view->chekeds);
     	}
     }
     

@@ -30,8 +30,8 @@ class ConfigController extends Zend_Controller_Action
     			'site_cookieDomain' 		=> $globalConfig->production->site->cookieDomain,
     			'site_cookiePath' 			=> $globalConfig->production->site->cookiePath,
     			
-    			'site_meta_description' 	=> $globalConfig->production->site->meta->description,
-    			'site_meta_keywords' 		=> $globalConfig->production->site->meta->keywords,
+    			'site_meta_description' 	=> $globalConfig->production->site->metaDescription,
+    			'site_meta_keywords' 		=> $globalConfig->production->site->metaKeywords,
     			'site_robots' 				=> $globalConfig->production->site->robots,
     			'site_contentRights' 		=> $globalConfig->production->site->contentRights,
     			
@@ -69,8 +69,8 @@ class ConfigController extends Zend_Controller_Action
     		$globalConfig->production->site->cookieDomain  		= $values['site_cookieDomain'];
     		$globalConfig->production->site->cookiePath  		= $values['site_cookiePath'];
     			
-    		$globalConfig->production->site->meta->description  = $values['site_meta_description'];
-    		$globalConfig->production->site->meta->keywords  	= $values['site_meta_keywords'];
+    		$globalConfig->production->site->metaDescription  	= $values['site_meta_description'];
+    		$globalConfig->production->site->metaKeywords  		= $values['site_meta_keywords'];
     		$globalConfig->production->site->robots  			= $values['site_robots'];
     		$globalConfig->production->site->contentRights  	= $values['site_contentRights'];
     			

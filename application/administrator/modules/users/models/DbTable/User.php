@@ -72,6 +72,12 @@ class Users_Model_DbTable_User extends Zendvn_Db_Table_Abstract
  		$item = $this->find($id)->current();
  		$item->delete();
  	}
+ 	
+ 	public function deleteItems($itemIds){
+ 		foreach ($itemIds as $id){
+    		$this->deleteItem($id);
+    	}
+ 	}
   	
  	public function createItem($data){
  		// Password
@@ -200,7 +206,7 @@ class Users_Model_DbTable_User extends Zendvn_Db_Table_Abstract
  		$items = $tblTemplate->fetchAll($tblTemplate->select()->setIntegrityCheck(false)
  				->from('templates')
  				->joinLeft('extensions', 'extensions.name = templates.type', array('template' => 'extensions.title', 'style' => 'templates.title'))
- 				->where('extensions.session = ?', 'site')
+ 				->where('extensions.location = ?', 'site')
  				->order('extensions.title ASC')
  				->order('templates.title ASC')
  		);

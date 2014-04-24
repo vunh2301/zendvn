@@ -87,6 +87,12 @@ class Contents_Model_DbTable_Category extends Zendvn_Db_Table_NestedSet
 		//Del Branch
 		$this->removeNode($id);
 	}
+	
+	public function deleteItems($itemIds){
+		foreach ($itemIds as $id){
+			$this->deleteItem($id);
+		}
+	}
 
 	private function _deleteArticles($id){
 		// Delete All Articles

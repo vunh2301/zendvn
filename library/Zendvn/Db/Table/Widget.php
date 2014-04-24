@@ -9,7 +9,7 @@ class Zendvn_Db_Table_Widget extends Zendvn_Db_Table_Abstract{
 			return $this->fetchAll($this->select()->setIntegrityCheck(false)
 					->from('widgets')
 					->joinLeft('extensions', 'extensions.id = widgets.extension_id', array('name' => 'extensions.name'))
-					->where('extensions.session = ?', $location)
+					->where('extensions.location = ?', $location)
 					->order('order')
 					->group('widgets.id'));
 			}
@@ -21,7 +21,7 @@ class Zendvn_Db_Table_Widget extends Zendvn_Db_Table_Abstract{
 					->from('widgets')
 					->joinLeft('extensions', 'extensions.id = widgets.extension_id', array('name' => 'extensions.name'))
 					->joinRight('widget_menu', 'widgets.id = widget_menu.widget_id')
-					->where('extensions.session = ?', $location)
+					->where('extensions.location = ?', $location)
 					->where('widget_menu.menu_id = 0 OR widget_menu.menu_id = ?', $pid)
 					->order('order')
 					->group('widget_menu.widget_id')

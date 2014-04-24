@@ -85,7 +85,7 @@ class Zendvn_Acl extends Zend_Acl {
 	    		}
 	    	}
     	}
-    }
+	}
     
     protected function _loadResources(){
     	$tblResource = new Zendvn_Db_Table_AclResource();
@@ -141,15 +141,15 @@ class Zendvn_Acl extends Zend_Acl {
     public function getForm($resource, $privileges = null, $name, $populate = true){
     	if(is_string($privileges) || $privileges === null){
     		$namePath 	= explode(".", $resource);
-    		$aclPrivilegePath = APPLICATION_PATH . '/administrator/modules/' . $namePath[0] . '/acl.xml';
+    		$aclPrivilegePath = APPLICATION_PATH . '/administrator/modules/' . $namePath[0] . '/acl';
     		if(is_string($privileges)){
     			$section 	= $privileges;
     		}else{
     			$section 	= $resource;
     		}
-    		if(file_exists($aclPrivilegePath)){
-    			$privileges = new Zend_Config_Xml($aclPrivilegePath, $section, array('skipExtends' => true,'allowModifications' => true));
-    			$privileges = $privileges->toArray();
+    		$aclPrivilegeConfig = Zendvn_Config::factory($aclPrivilegePath, $section, array('skipExtends' => true,'allowModifications' => true));
+    		if(null !== $aclPrivilegeConfig){
+    			$privileges = $aclPrivilegeConfig->toArray();
     		}
     	}elseif($privileges instanceof Zend_Config){
     		$privileges = $privileges->toArray();
@@ -253,5 +253,9 @@ class Zendvn_Acl extends Zend_Acl {
     		$this->_resources[$resourceParentId]['children'][$resourceId] = $resource;
     		$this->_resources[$resourceId]['parent'] = $parent;
     	}
+    }
+    
+    public function moveRole($role, $parent){
+    	
     }
 }

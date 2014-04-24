@@ -57,9 +57,7 @@ class Contents_CategoriesController extends Zend_Controller_Action
 				$tblCategory->moveNode($orderValue['id'], 'right', $parentId);
 			}
 		}elseif($task == 'delete' && ($this->view->chekeds = $this->_request->getParam('record', null)) != null){
-			foreach ($this->view->chekeds as $recordId){
-				$tblCategory->deleteItem($recordId);
-			}
+			$tblCategory->deleteItems($this->view->chekeds);
 		}
 	}
 	

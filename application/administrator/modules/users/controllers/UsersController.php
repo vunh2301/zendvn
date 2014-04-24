@@ -1,7 +1,6 @@
 <?php
 class Users_UsersController extends Zendvn_Controller_Action
 {
-
 	public function init(){
 		//Zend_Session::namespaceUnset('admin.users.users');
 		$configModule = new Zend_Session_Namespace('admin.users.users');
@@ -50,9 +49,7 @@ class Users_UsersController extends Zendvn_Controller_Action
     	}elseif($task == 'activate' && ($this->view->chekeds = $this->_request->getParam('record', null)) != null){
     		$tblUser->updateActivate($this->view->chekeds);
     	}elseif($task == 'delete' && ($this->view->chekeds = $this->_request->getParam('record', null)) != null){
-    		foreach ($this->view->chekeds as $recordId){
-    			$tblUser->deleteItem($recordId);
-    		}
+    		$tblUser->deleteItems($this->view->chekeds);
     	}
     }
     
@@ -63,14 +60,14 @@ class Users_UsersController extends Zendvn_Controller_Action
     	Zendvn_Factory::addBreadcrumb(array(array('label' => 'Edit User')));
     	
     	// Data Table
-    	$tblUsers 	= new Users_Model_DbTable_User();
+    	$tblUser 	= new Users_Model_DbTable_User();
     	$form 		= new Users_Form_Profile();
-    	$user 		= $tblUsers->getItem($userId);
+    	$user 		= $tblUser->getItem($userId);
     	$form->populate($user->toArray());
     	
-    	$form->template->setMultiOptions(array(0 => 'User Default') + (array)$tblUsers->getTemplates());
+    	$form->template->setMultiOptions(array(0 => 'User Default') + (array)$tblUser->getTemplates());
     	
-    	$form->groups->setMultiOptions($tblUsers->getGroups());
+    	$form->groups->setMultiOptions($tblUser->getGroups());
     	// Update value
     	$groups = $user->findManyToManyRowset('Users_Model_DbTable_Group', 'Users_Model_DbTable_UserGroup');
     	if($groups->count() > 0){
@@ -102,7 +99,7 @@ class Users_UsersController extends Zendvn_Controller_Action
     			$values = array_shift(array_values($form->getValues()));
     			
     			// Update
-    			$tblUsers->updateItem($userId, $values);
+    			$tblUser->updateItem($userId, $values);
     			
     			// Process Task
     			if($task == 'edit.close'){
@@ -125,12 +122,12 @@ class Users_UsersController extends Zendvn_Controller_Action
     	Zendvn_Factory::addBreadcrumb(array(array('label' => 'New User')));
     	 
     	// Data Table
-    	$tblUsers 	= new Users_Model_DbTable_User();
+    	$tblUser 	= new Users_Model_DbTable_User();
     	$form 		= new Users_Form_Profile();
     	 
-    	$form->template->setMultiOptions(array(0 => 'User Default') + (array)$tblUsers->getTemplates());
+    	$form->template->setMultiOptions(array(0 => 'User Default') + (array)$tblUser->getTemplates());
     	 
-    	$form->groups->setMultiOptions($tblUsers->getGroups());
+    	$form->groups->setMultiOptions($tblUser->getGroups());
     	$form->groups->setValue(2);
     	 
     	//Add Validate
@@ -158,7 +155,7 @@ class Users_UsersController extends Zendvn_Controller_Action
     			$values = array_shift(array_values($form->getValues()));
     			 
     			// Update
-    			$userId = $tblUsers->createItem($values);
+    			$userId = $tblUser->createItem($values);
     			 
     			// Process Task
     			if($task == 'edit.close'){

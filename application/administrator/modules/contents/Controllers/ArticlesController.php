@@ -50,9 +50,7 @@ class Contents_ArticlesController extends Zendvn_Controller_Action
 		}elseif(($task == 'featured' || $task == 'unfeatured') && ($this->view->chekeds = $this->_request->getParam('record', null)) != null){
 			$tblArticle->updateFeatured($this->view->chekeds, ($task == 'featured'));
 		}elseif($task == 'delete' && ($this->view->chekeds = $this->_request->getParam('record', null)) != null){	
-			foreach ($this->view->chekeds as $recordId){
-				$tblArticle->deleteItem($recordId);
-			}
+			$tblArticle->deleteItems($this->view->chekeds);
 		}
 	}
 	

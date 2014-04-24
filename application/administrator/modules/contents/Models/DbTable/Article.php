@@ -32,6 +32,12 @@ class Contents_Model_DbTable_Article extends Zendvn_Db_Table_Abstract
 		
 	}
 	
+	public function deleteItems($itemIds){
+		foreach ($itemIds as $id){
+			$this->deleteItem($id);
+		}
+	}
+	
 	public function getItems($filter){
 		$select = $this->select()
 		->from('articles')

@@ -1,0 +1,94 @@
+<form action="" id="adminForm" name="adminForm" method="post">	
+	<div class="row">
+		<nav class="navbar navbar-default" role="navigation">
+			<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-2">
+						<span class="sr-only">Toggle navigation</span>
+						&nbsp;<span class="glyphicon glyphicon-cog"></span>&nbsp;
+					</button>
+					<a class="navbar-brand" href="#">Global Config</a>
+				</div>
+				<div class="collapse navbar-collapse" id="navbar-collapse-2">
+					<ul class="nav navbar-nav navbar-right">
+						<button type="submit" class="btn btn-default btn-sm btn-primary navbar-btn"><span class="glyphicon glyphicon-floppy-saved"></span> Save</button>
+						
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<ul class="nav nav-tabs">
+			<li class="active">
+				<a href="#site" data-toggle="tab">Site</a>
+			</li>
+			<li>
+				<a href="#server" data-toggle="tab">Server</a>
+			</li>
+		</ul>
+		<div class="tab-content panel panel-default tabs-panel">
+			<div class="tab-pane active panel-body" id="site">
+				<div class="row">
+				
+					<div class="col-md-6">
+						<div class="panel panel-default">
+							<div class="panel-heading">Site Settings</div>
+							<div class="panel-body">
+								<?php echo $this->form->site_settings; ?>
+							</div>
+						</div>
+						<div class="panel panel-default">
+							<div class="panel-heading">SEO Settings</div>
+							<div class="panel-body">
+								<?php echo $this->form->seo_settings; ?>
+							</div>
+						</div>
+					</div>
+	  				<div class="col-md-6">
+	  					<div class="panel panel-default">
+	  						<div class="panel-heading">Cookie Settings</div>
+							<div class="panel-body">
+								<?php echo $this->form->cookie_settings; ?>
+							</div>
+						</div>
+	  					<div class="panel panel-default">
+	  						<div class="panel-heading">Metadata Settings</div>
+							<div class="panel-body">
+								<?php echo $this->form->metadata_settings; ?>
+							</div>
+						</div>
+	  				</div>
+	  				
+	  			</div>
+	  		</div>
+	  		<div class="tab-pane panel-body" id="server">
+	  			<div class="row">	
+	  			
+	  				<div class="col-md-6">
+						<div class="panel panel-default">
+							<div class="panel-heading">Server Settings</div>
+							<div class="panel-body">
+								<?php echo $this->form->server_settings; ?>
+							</div>
+						</div>
+						<div class="panel panel-default">
+							<div class="panel-heading">Database Settings</div>
+							<div class="panel-body">
+								<?php echo $this->form->database_settings; ?>
+							</div>
+						</div>
+					</div>
+	  				<div class="col-md-6">
+	  					<div class="panel panel-default">
+	  						<div class="panel-heading">Mail Settings</div>
+							<div class="panel-body">
+								<?php echo $this->form->mail_settings; ?>
+							</div>
+						</div>
+	  				</div>
+	  				
+				</div>
+			</div>
+		</div>
+	</div>	
+</form>

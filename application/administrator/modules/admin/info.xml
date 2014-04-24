@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<administration>
+		<nav position="root">
+			<global>
+	            <label>System</label>
+	            <id>system</id>
+	            <uri>#</uri>
+	            <order>-1</order>
+	            <privilege>manager</privilege>
+	            <resource>admin</resource>
+	            <pages>
+			        <global-config>
+			            <label>Global Config</label>
+			            <module>admin</module>
+			            <controller>config</controller>
+			        </global-config>
+			        <global-permission>
+			            <label>Permission Manager</label>
+			            <module>admin</module>
+			            <controller>permissions</controller>
+			        </global-permission>
+	            </pages>
+	        </global>
+		</nav>
+	</administration>
+</config>

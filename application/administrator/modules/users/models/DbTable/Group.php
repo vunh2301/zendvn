@@ -60,6 +60,41 @@ class Users_Model_DbTable_Group extends Zendvn_Db_Table_NestedSet
 		}
 	}
 	
+	public function updateItem($id, $data){
+		$parentId = $data['parent_id'];
+		unset($data['parent_id']);
+		
+		if($id > 0){
+			// Update Parent
+			$this->moveNode($id, 'right', $parentId);
+			$this->update($data, $this->_db->quoteInto('id = ?', $id));
+		}
+	}
+	
+	public function createItem($data){
+		$parentId = $data['parent_id'];
+		unset($data['parent_id']);
+		if($parentId > 0){
+			if(($id = $this->insertNode($data, 'right', $parentId)) > 0){
+				$this->update($data, $this->_db->quoteInto('id = ?', $id));
+				return $id;
+			}
+		}
+		return false;
+	}
+	
+	public function copyItem($id){
+		$item = $this->find($id)->current();
+		if(null !== $item){
+			$data = $item->toArray();
+			unset($data['id']);
+			unset($data['parent_id']);
+			$data['title'] = $this->copyTitle($data['title']);
+			$id = $this->insertNode($data, 'after', $id);
+			return $id;
+		}
+	}
+	
 	private function _deleteUsers($id){
 		// Delete All Users
 		$tblUser = new Users_Model_DbTable_User();
@@ -82,6 +117,17 @@ class Users_Model_DbTable_Group extends Zendvn_Db_Table_NestedSet
 			return $list;
 		}
 		return array();
+	}
+
+	private function copyTitle($title){
+		$matches = array();
+		preg_match_all('/' . preg_quote(' (copy ', '/') . '(\d+)'. preg_quote(')', '/').'/i', $title, $matches);
+		if($matches[1] != null){
+			$title = str_replace($matches[0][0],	' (copy ' . ((integer)$matches[1][0] + 1) . ')', $title);
+		}else{
+			$title = $title . ' (copy 1)';
+		}
+		return $title;
 	}
 }
 

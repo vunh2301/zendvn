@@ -155,20 +155,21 @@ class Contents_Model_DbTable_Category extends Zendvn_Db_Table_NestedSet
 		unset($data['modified_user']);
 		unset($data['id']);
 	
-		// Update Parent
-		$id = $this->insertNode($data, 'right', $parentId);
-		if($id > 0){
-			// Update Order
-			if($preOrder != null){
-				$orderValues = json_decode($orderValues, true);
-				foreach ($orderValues as $orderValue){
-					$this->moveNode($orderValue['id'], 'right', $parentId);
+		if($parentId > 0){
+			if(($id = $this->insertNode($data, 'right', $parentId)) > 0){
+				// Update Order
+				if($preOrder != null){
+					$orderValues = json_decode($orderValues, true);
+					foreach ($orderValues as $orderValue){
+						$this->moveNode($orderValue['id'], 'right', $parentId);
+					}
 				}
+				// Update Status
+				$this->updateBranch(array('status' => $data['status']), $id);
+				return $id;
 			}
-			// Update Status
-			$this->updateBranch(array('status' => $data['status']), $id);
 		}
-		return $id;
+		return false;
 	}
 
 	public function copyItem($id){

@@ -79,7 +79,13 @@ class Contents_CategoriesController extends Zend_Controller_Action
 		
 		$parentId = $this->_request->getPost('parent_id', $category->parent_id);
 		
-		$form->parent_id->setMultiOptions($tblCategory->getParents($categoryId));
+		$form->parent_id->setMultiOptions($tblCategory->getParents());
+		// Disable curent category and childs
+		$childs = $tblCategory->getChilds($categoryId);
+		$disableOptions = array();
+		if($childs->count() > 0)foreach ($childs as $child)$disableOptions[] = $child->id;
+		$form->parent_id->setAttrib("disable", $disableOptions + array($categoryId));
+		
 		$form->parent_id->setAttrib('onchange', '$.post(\'' . $this->view->url(array('module' => 'contents', 'controller' => 'categories', 'action' => 'ajax'), null, true) . '/task/order/id/' . $categoryId . '/pid/\' + $(\'#parent_id\').val(), function(data){$(\'.dd\').html(data).nestable({maxDepth: 1}); $(\'#order\').val($(\'.dd .active\').index() > 0 ? $(\'.dd .active\').index() : 0);});');
 		
 		$this->view->order_category = $tblCategory->getOrderModal($categoryId, $parentId);

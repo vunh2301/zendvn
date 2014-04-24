@@ -81,6 +81,9 @@ class Users_GroupsController extends Zendvn_Controller_Action
     				$this->_helper->_redirector->gotoSimple('index', 'groups', 'users');
     			}elseif($task == 'edit.new'){
     				$this->_helper->_redirector->gotoSimple('create', 'groups', 'users');
+    			}elseif($task == 'edit.copy'){
+    				$groupId = $tblGroup->copyItem($groupId);
+    				$this->_helper->_redirector->gotoSimple('edit', 'groups', 'users', array('id' => $groupId));
     			}else{
     				$this->_helper->_redirector->gotoSimple('edit', 'groups', 'users', array('id' => $groupId));
     			}
@@ -91,54 +94,33 @@ class Users_GroupsController extends Zendvn_Controller_Action
     }
     
     public function createAction(){
-    	$userId = $this->_request->getParam('id', 0);
+    	
     	$task = $this->_request->getParam('task');
-    	if($task == 'close') $this->_helper->_redirector->gotoSimple('index', 'users', 'users');
-    	Zendvn_Factory::addBreadcrumb(array(array('label' => 'New User')));
-    	 
+    	if($task == 'close') $this->_helper->_redirector->gotoSimple('index', 'groups', 'users');
+    	Zendvn_Factory::addBreadcrumb(array(array('label' => 'New Group')));
+    	
     	// Data Table
-    	$tblUsers 	= new Users_Model_DbTable_User();
-    	$form 		= new Users_Form_Profile();
-    	 
-    	$form->template->setMultiOptions(array(0 => 'User Default') + (array)$tblUsers->getTemplates());
-    	 
-    	$form->groups->setMultiOptions($tblUsers->getGroups());
-    	$form->groups->setValue(2);
-    	 
-    	//Add Validate
-    	$form->username->addValidator(new Zend_Validate_Alnum(array('allowWhiteSpace' => false)));
-    	$form->username->addValidator(new Zend_Validate_StringLength(array('min' => 4, 'max' => 16)));
-    	$form->username->addValidator(new Zend_Validate_Db_NoRecordExists(array('table' => 'users','field' => 'username')));
-    
-    	$form->password->setRequired(true);
-    	$form->password->addValidator(new Zend_Validate_StringLength(array('min' => 6, 'max' => 16)));
-    	
-    	$form->password_confirm->addValidator('Identical', false, array('token' => 'password'));
-    	$form->password_confirm->addErrorMessage('The passwords do not match');
-    
-    	$form->email->addValidator('EmailAddress');
-    	$form->email->addValidator(new Zend_Validate_Db_NoRecordExists(array('table' => 'users','field' => 'email')));
-    	
-    	//set default timezone
-    	$appConfig = Zendvn_Factory::getAppConfig();
-    	$siteConfig = $appConfig['site'];
-    	$form->timezone->setValue($siteConfig['timezone']);
-
+    	$tblGroup 	= new Users_Model_DbTable_Group();
+    	$form 		= new Users_Form_Group();
+    	$form->parent_id->setMultiOptions($tblGroup->getParents());
     	 
     	if($this->_request->isPost()){
     		if($form->isValid($this->_request->getPost())){
-    			$values = array_shift(array_values($form->getValues()));
+    			$values = $form->getValues();
     			 
     			// Update
-    			$userId = $tblUsers->createItem($values);
+    			$groupId = $tblGroup->createItem($values);
     			 
     			// Process Task
     			if($task == 'edit.close'){
-    				$this->_helper->_redirector->gotoSimple('index', 'users', 'users');
+    				$this->_helper->_redirector->gotoSimple('index', 'groups', 'users');
     			}elseif($task == 'edit.new'){
-    				$this->_helper->_redirector->gotoSimple('create', 'users', 'users');
+    				$this->_helper->_redirector->gotoSimple('create', 'groups', 'users');
+    			}elseif($task == 'edit.copy'){
+    				$groupId = $tblGroup->copyItem($groupId);
+    				$this->_helper->_redirector->gotoSimple('edit', 'groups', 'users', array('id' => $groupId));
     			}else{
-    				$this->_helper->_redirector->gotoSimple('edit', 'users', 'users', array('id' => $userId));
+    				$this->_helper->_redirector->gotoSimple('edit', 'groups', 'users', array('id' => $groupId));
     			}
     		}
     	}

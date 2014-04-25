@@ -94,7 +94,7 @@ class ConfigController extends Zend_Controller_Action
     		$globalConfig->production->resources->mail->defaultFrom->email  	= $values['resources_mail_defaultFrom_email'];
     		$globalConfig->production->resources->mail->defaultFrom->name  		= $values['resources_mail_defaultFrom_name'];
     		 
-    		$writer = new Zend_Config_Writer_Ini(
+    		$writer = new Zendvn_Config_Writer_Ini(
     				array(
     						'config'   => $globalConfig,
     						'filename' => APPLICATION_PATH . '/configs/application.ini'
@@ -104,7 +104,6 @@ class ConfigController extends Zend_Controller_Action
     	}
     	 
     	$this->view->form = $form;
-    	$this->view->globalConfig = $globalConfig->production;
     }
 
 }

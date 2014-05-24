@@ -1,0 +1,88 @@
+<div class="navbar<?php echo ($this->params->fixed ? ' ' . $this->params->fixed : '');?><?php echo($this->params->inverted ? ' navbar-inverse' : ' navbar-default')?>" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="<?= $this->url(array('module' => 'admin'), null, true); ?>"><?php echo $this->params->brand_name;?></a>
+		</div>
+		<div class="collapse navbar-collapse" id="navbar-collapse-1">
+			<?php echo $this->widgetMenu(); ?>
+			<div class="navbar-right">
+				<a href="<?= $this->baseUrl();?>" class="btn btn-default navbar-btn" data-placement="bottom" data-toggle="tooltip" title="View Your Site" target="_blank">
+					<span class="glyphicon glyphicon-eye-open"></span>
+				</a>
+				<a href="<?= $this->url(array('module' => 'admin', 'controller'=>'login', 'action'=>'logout'), null, true); ?>" class="btn btn-default navbar-btn" data-placement="bottom" data-toggle="tooltip" title="Logout!">
+					<span class="glyphicon glyphicon-log-out"></span>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+<?php 
+if($this->params->fixed == 'navbar-fixed-top'){
+	echo '<style> body { padding-top: 70px; }; </style>';
+}elseif($this->params->fixed == 'navbar-fixed-bottom'){
+	echo '<style> body { padding-bottom: 70px; }; </style>';
+}
+?>
+
+<?php if($this->params->hover == true) {?>
+<style>
+
+
+ul.nav li.dropdown:hover > ul.dropdown-menu {
+    display: block;    
+}
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px;
+    border-radius: 0 6px 6px 6px;
+}
+
+.dropdown-submenu:hover>.dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu>a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+.dropdown-submenu:hover>a:after {
+    border-left-color: #fff;
+}
+
+.dropdown-submenu.pull-left {
+    float: none;
+}
+
+.dropdown-submenu.pull-left>.dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
+}
+</style>
+<?php };?>

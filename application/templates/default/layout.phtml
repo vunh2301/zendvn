@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<?= $this->headMeta()?>
+		<?= $this->headTitle()?>
+		<!-- Bootstrap -->
+		<link href="<?php echo $this->baseUrl('templates/admin/css/bootstrap.min.css')?>" rel="stylesheet">
+		<?= $this->headLink()?>
+		<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		<style>
+			body {
+				background-color: #e9e9e9;
+			}
+			.block {
+				margin-bottom: 30px;
+				box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<?php echo $this->displayRow('top'); ?>
+			<?php echo $this->displayRow('header'); ?>
+			<?php echo $this->displayRow('showcase'); ?>
+			<?php echo $this->displayRow('feature'); ?>
+			<?php echo $this->displayRow('utility'); ?>
+			<?php if($this->sidebar == null){ ?>
+			<?php echo $this->displayRow('content_top'); ?>
+			<div class="row">
+				<div class="col col-md-12">
+					<?php echo $this->layout()->content;?>
+				</div>
+			</div>
+			<?php echo $this->displayRow('content_bottom'); ?>
+			<?php }else{ ?>
+			<?php echo $this->displayRow('sidebar'); ?>
+			<?php } ?>
+			
+			<?php echo $this->displayRow('bottom'); ?>
+			<?php echo $this->displayRow('footer'); ?>
+			<?php echo $this->displayRow('copyright'); ?>
+		</div>
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="<?php echo $this->baseUrl('/templates/admin/js/jquery-1.11.0.min.js')?>"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="<?php echo $this->baseUrl('/templates/admin/js/bootstrap.min.js')?>"></script>
+		<?=$this->headScript()?>
+	</body>
+</html>

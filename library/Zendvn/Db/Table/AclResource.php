@@ -46,6 +46,8 @@ class Zendvn_Db_Table_AclResource extends Zendvn_Db_Table_NestedSet
 					}
 				}
 			}
+			$cache = Zendvn_Factory::getCache('Cms');
+			$cache->remove('Acl');
 		}
 	
 	}
@@ -68,6 +70,8 @@ class Zendvn_Db_Table_AclResource extends Zendvn_Db_Table_NestedSet
 			$resourceId = $this->insertNode($data, 'right', $parentId);
 			$acl->add(new Zendvn_Acl_Resource($resource, $resourceId), $parentResource);
 		}
+		$cache = Zendvn_Factory::getCache('Cms');
+		$cache->remove('Acl');
 		return $resourceId;
 	}
 	

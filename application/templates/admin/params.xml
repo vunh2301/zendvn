@@ -1,0 +1,8 @@
+<config>
+	<title>admin</title>
+	<message>Administrator Template</message>
+	<type>template</type>
+	<params>
+		<register class="Templates_Form_Options"/>
+	</params>
+</config>

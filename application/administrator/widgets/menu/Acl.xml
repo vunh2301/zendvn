@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<menu>
+		<access 	title="Access"	description=""	allow="4"/>
+		<edit 		title="Edit"	description=""	allow="4"/>
+	</menu>
+</config>

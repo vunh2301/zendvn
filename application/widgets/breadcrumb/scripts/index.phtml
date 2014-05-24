@@ -1,0 +1,33 @@
+<?php 
+$menus = Zendvn_Menu::getInstance()->getMenus();
+$container = $this->toNavigation($menus);
+?>
+<div class="row hidden-xs">
+	<ol class="breadcrumb">
+		<li>
+			<span class="glyphicon glyphicon-home text-primary"></span> <a href="<?php echo $this->baseUrl(); ?>">Home</a>
+		</li>
+		<li class="active">
+		<?php 
+			$breadcrumbs = $this->navigation($container)->breadcrumbs()->setMinDepth(0)->setSeparator('</li>' . PHP_EOL . '<li class="active">');
+			if(Zendvn_Factory::getBreadcrumb()){
+				$breadcrumbs->setLinkLast(true);
+			}
+		?>
+			<?php echo $breadcrumbs; ?>
+		</li>
+		<?php 
+		if($breadcrumbs = Zendvn_Factory::getBreadcrumb()){
+			foreach ($breadcrumbs as $breadcrumb){
+				echo '<li class="active">';
+				if(isset($breadcrumb['url'])){
+					echo '<a href="' . $breadcrumb['url'] . '">' . $breadcrumb['label'] . '</a>';
+				}else{
+					echo $breadcrumb['label'];
+				}
+				echo '</li>';
+			}
+		}
+		?>
+	</ol>
+</div>

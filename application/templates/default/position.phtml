@@ -1,0 +1,21 @@
+<div class="panel-body">
+	<?php echo $this->displayRow('top', true); ?>
+	<?php echo $this->displayRow('header', true); ?>
+	<?php echo $this->displayRow('showcase', true); ?>
+	<?php echo $this->displayRow('feature', true); ?>
+	<?php echo $this->displayRow('utility', true); ?>
+	<?php if($this->sidebar == null){ ?>
+	<?php echo $this->displayRow('content_top', true); ?>
+	<div class="row">
+		<div class="col col-xs-12">
+			<main/>
+		</div>
+	</div>
+	<?php echo $this->displayRow('content_bottom', true); ?>
+	<?php }else{ ?>
+	<?php echo $this->displayRow('sidebar', true); ?>
+	<?php } ?>
+	<?php echo $this->displayRow('bottom', true); ?>
+	<?php echo $this->displayRow('footer', true); ?>
+	<?php echo $this->displayRow('copyright', true); ?>
+</div>

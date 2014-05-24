@@ -1,0 +1,84 @@
+<?php 
+$menus = Zendvn_Menu::getInstance()->getMenus();
+if($menus->count() > 0){
+	foreach ($menus as $menu){
+		if($menu->menu_type_id == $this->params->menu_location)
+			$arrMenus[] = $menu;
+	}
+}
+$container = $this->toNavigation($arrMenus);
+?>
+<div class="row">
+	<div class="navbar <?php echo $this->fixed;?> <?=($this->inverted ? ' navbar-inverse' : ' navbar-default')?>" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-<?php echo $this->widget->id; ?>">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+			<div class="collapse navbar-collapse" id="navbar-collapse-<?php echo $this->widget->id; ?>">
+				<?php echo $this->menu($container)->setUlClass('nav navbar-nav')->addPageClassToLi(true); ?>
+			</div>
+		</div>
+	</div>
+</div>
+<style>
+.navbar-default .navbar-nav>li.dropdown:hover>a, .navbar-default .navbar-nav>li.dropdown:hover>a:hover, .navbar-default .navbar-nav>li.dropdown:hover>a:focus {
+	background-color: #e7e7e7;
+	color: #555;
+}
+
+ul.nav li.dropdown:hover > ul.dropdown-menu {
+    display: block;    
+}
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px;
+    border-radius: 0 6px 6px 6px;
+}
+
+.dropdown-submenu:hover>.dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu>a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+.dropdown-submenu:hover>a:after {
+    border-left-color: #fff;
+}
+
+.dropdown-submenu.pull-left {
+    float: none;
+}
+
+.dropdown-submenu.pull-left>.dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
+}
+</style>

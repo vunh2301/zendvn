@@ -5,6 +5,31 @@ class Zendvn_Factory{
 		return $front->getParam('bootstrap')->getOptions();
 	}
 	
+	// Get Cache
+	public function getCache($name){
+		$manager = Zend_Registry::get('Zendvn_Cache');
+		$dbCache = array(
+				'frontend' => array(
+						'name' => 'Core',
+						'options' => array(
+								'lifetime' => 7200,
+								'automatic_serialization' => true
+						)
+				),
+				'backend' => array(
+						'name' => 'File',
+						'options' => array(
+								'cache_dir' => APPLICATION_PATH . '/cache'
+						)
+				)
+		);
+		if ($manager->hasCache($name)) {
+		    return $manager->getCache($name);
+		} else {
+		    return $manager->setCacheTemplate($name, $dbCache)->getCache($name);
+		}
+	}
+	
 	// Get Location
 	public function getLocation(){
 		return Zend_Registry::get('Zendvn_Location');
@@ -16,11 +41,21 @@ class Zendvn_Factory{
 	}
 
 	public static function getAcl(){
-		return Zendvn_Acl::getInstance();
+		$cache = Zendvn_Factory::getCache('Cms');
+		if (!($acl = $cache->load('Acl'))) {
+			$acl = Zendvn_Acl::getInstance();
+			$cache->save($acl);
+		}
+		return $acl;
 	}
 	
 	public static function getMenu(){
-		return Zendvn_Menu::getInstance();
+		$cache = Zendvn_Factory::getCache('Cms');
+		if (!($menu = $cache->load('Menu'))) {
+			$menu = Zendvn_Menu::getInstance();
+			$cache->save($menu);
+		}
+		return $menu;
 	}
 	
 	public function getWidgets(){
@@ -74,8 +109,8 @@ class Zendvn_Factory{
 			}
 			return $container;
 		}else{
-			$menuTypeId = $menuTypeId > 0 ? $menuTypeId : Zendvn_Menu::getInstance()->getHomeMenu()->menu_location;
-			$menus 		= Zendvn_Menu::getInstance()->getMenus();
+			$menuTypeId = $menuTypeId > 0 ? $menuTypeId : $this->getMenu()->getHomeMenu()->menu_location;
+			$menus 		= $this->getMenu()->getMenus();
 			if($menus->count() > 0){
 				foreach ($menus as $menu){
 					if($menu->menu_type_id == $menuTypeId)

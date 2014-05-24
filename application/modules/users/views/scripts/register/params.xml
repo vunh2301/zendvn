@@ -1,0 +1,8 @@
+<config>
+	<title>Registration Form</title>
+	<message>Message Registration Form</message>
+	<type>module</type>
+	<params>
+		<register class="Params_Form_Register"/>
+	</params>
+</config>

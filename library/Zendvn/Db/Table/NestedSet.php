@@ -48,7 +48,7 @@ class Zendvn_Db_Table_NestedSet extends Zend_Db_Table_Abstract
 				$this->_ordering[$parentId][$item->id] = $index;
 			}
 		}
-		return $this->_ordering[$parentId][$id];
+		return isset($this->_ordering[$parentId][$id]) ? $this->_ordering[$parentId][$id] : null;
 	}
 	
 	public function getNode($id){

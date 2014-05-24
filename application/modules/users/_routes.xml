@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes>
+	<detail type="Zend_Controller_Router_Route_Regex">
+		<route>
+            <route>(\d+)-(.[^/]+)</route>
+            <defaults>
+                <action>detail</action>
+            </defaults>
+            <map>
+                <id>1</id>
+                <alias>2</alias>
+            </map>
+            <reverse>%d-%s</reverse>
+        </route>
+    </detail>
+</routes>

@@ -10,8 +10,10 @@ class ConfigController extends Zend_Controller_Action
 
     public function indexAction()
     {
-    	$form = new Admin_Form_Config();
-    	$globalConfig = new Zend_Config_Ini(
+    	$acl 			= Zendvn_Factory::getAcl();
+    	$form 			= new Admin_Form_Config();
+    	$tblResource 	= new Zendvn_Db_Table_AclResource();
+    	$globalConfig 	= new Zend_Config_Ini(
     			APPLICATION_PATH . '/configs/application.ini',
     			null,
     			array(
@@ -19,7 +21,7 @@ class ConfigController extends Zend_Controller_Action
     					'allowModifications' => true
     			)
     	);
-    	$options = array(
+    	$options 		= array(
     			'site_name' 				=> $globalConfig->production->site->name,
     			'site_offline' 				=> $globalConfig->production->site->offline,
     			'site_offlineMessage' 		=> $globalConfig->production->site->offlineMessage,
@@ -101,9 +103,41 @@ class ConfigController extends Zend_Controller_Action
     				)
     		);
     		$writer->write();
+    		// Update Privileges Root resource
+    		if($this->_request->getParam('rootPermission', null) !== null)
+    			$tblResource->updatePrivileges('root', $this->_request->getParam('rootPermission', null));
     	}
     	 
     	$this->view->form = $form;
+    	$this->view->permission = $acl->getForm('root', array(
+				'access' => array(
+						'title' => 'Access Site'
+				),
+				'admin' => array(
+						'title' => 'Access Admin'
+				),
+				'manager' => array( 
+						'title' => 'Manager'
+				),
+				'config' => array(
+						'title' => 'Config'
+				),
+				'create' => array(
+						'title' => 'Create'
+				),
+				'delete' => array(
+						'title' => 'Delete'
+				),
+				'edit' => array(
+						'title' => 'Edit'
+				),
+				'editOwn' => array(
+						'title' => 'Edit Owner'
+				),
+				'editState' => array(
+						'title' => 'Edit State'
+				)
+		), 'rootPermission');
     }
 
 }

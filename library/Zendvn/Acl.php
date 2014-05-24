@@ -259,4 +259,5 @@ class Zendvn_Acl extends Zend_Acl {
     public function moveRole($role, $parent){
     	return $this->_getRoleRegistry()->moveRole($role, $parent);
     }
+
 }

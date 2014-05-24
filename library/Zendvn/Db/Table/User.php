@@ -7,7 +7,7 @@ class Zendvn_Db_Table_User extends Zendvn_Db_Table_Abstract{
 		if (!is_integer($id)) {
 			throw new Exception('Invalid argument: $id must be a integer');
 		}
-		if(null === ($item = $this->find($id)->current())){
+		if(null === ($item = $this->fetchRow($this->select()->where("id = ?", $id)))){
 			return null;
 		}
 		return $item;

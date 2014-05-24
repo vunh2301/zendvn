@@ -1,0 +1,109 @@
+<?php 
+$category = $this->category;
+$params = $category->getParams();
+?>
+<?php 
+if(count($leadings = $category->getLeadingArticles())){ 
+	foreach ($leadings as $leading){
+?>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default block">
+			<a href="<?php echo $this->baseUrl($this->route(array('action' => 'article', 'cid' => $leading->category_id, 'aid' => $leading->id, 'alias' => $leading->alias))); ?>">
+				<img alt="" src="<?php echo $this->baseUrl('/modules/contents/images/' . $leading->image); ?>" class="img-responsive">
+			</a>
+			<div class="panel-body">
+				<h4><?php echo $leading->title; ?></h4>
+				<p><?php echo $leading->description; ?></p>
+			</div>
+			<div class="panel-footer">
+				<a href="<?php echo $this->baseUrl($this->route(array('action' => 'article', 'cid' => $leading->category_id, 'aid' => $leading->id, 'alias' => $leading->alias))); ?>" class="btn btn-primary btn-xs pull-right ">Read more</a>
+				<span>
+					<small>Posted on <?php echo $leading->created_date; ?> by <?php echo $leading->created_user; ?></small>
+				</span>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<?php 
+	}
+}
+?>
+
+<?php 
+if(count($intros = $category->getIntroGridArticles()) > 0){ 
+?>
+<div class="row">
+<?php
+	foreach ($intros as $index => $intro){
+	if(fmod($index, (int)$params['intro-grid-column']) == false && $index > 0)echo '</div><div class="row">';
+?>
+	<div class="col-md-<?php echo 12/(int)$params['intro-grid-column'];?>">
+		<div class="panel panel-default block">
+			<a href="<?php echo $this->baseUrl($this->route(array('action' => 'article', 'cid' => $intro->category_id, 'aid' => $intro->id, 'alias' => $intro->alias))); ?>">
+				<img alt="" src="<?php echo $this->baseUrl('/modules/contents/images/' . $intro->image); ?>" class="img-responsive">
+			</a>
+			<div class="panel-body">
+				<h4><?php echo $intro->title; ?></h4>
+				<p><?php echo $intro->description; ?></p>
+			</div>
+			<div class="panel-footer">
+				<a href="<?php echo $this->baseUrl($this->route(array('action' => 'article', 'cid' => $intro->category_id, 'aid' => $intro->id, 'alias' => $intro->alias))); ?>" class="btn btn-primary btn-xs pull-right ">Read more</a>
+				<span>
+					<small>Posted on <?php echo $intro->created_date; ?> by <?php echo $intro->created_user; ?></small>
+				</span>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+	</div>
+	<?php }?>
+	</div>
+<?php }?>
+
+<?php 
+if(count($intros = $category->getIntroListArticles()) > 0){ 
+foreach ($intros as $index => $intro){
+?>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default block">
+			<div class="row">
+				<div class="col-md-4">
+					<a href="<?php echo $this->baseUrl($this->route(array('action' => 'article', 'cid' => $intro->category_id, 'aid' => $intro->id, 'alias' => $intro->alias))); ?>">
+						<img alt="" src="<?php echo $this->baseUrl('/modules/contents/images/' . $intro->image); ?>" class="img-responsive">
+					</a>
+				</div>
+				<div class="col-md-8">
+					<div class="panel-body">
+						<h4><?php echo $intro->title; ?></h4>
+						<p><?php echo $intro->description; ?></p>
+					</div>
+				</div>
+			</div>
+			<div class="panel-footer">
+				<a href="<?php echo $this->baseUrl($this->route(array('action' => 'article', 'cid' => $intro->category_id, 'aid' => $intro->id, 'alias' => $intro->alias))); ?>" class="btn btn-primary btn-xs pull-right ">Read more</a>
+				<span>
+					<small>Posted on <?php echo $intro->created_date; ?> by <?php echo $intro->created_user; ?></small>
+				</span>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<?php }}?>
+
+<?php 
+if(count($links = $category->getLinkArticles()) > 0){ 
+?>
+<div class="list-group">
+<?php
+foreach ($links as $index => $link){
+?>
+	<a href="<?php echo $this->baseUrl($this->route(array('action' => 'article', 'cid' => $link->category_id, 'aid' => $link->id, 'alias' => $link->alias))); ?>" class="list-group-item"><span class="glyphicon glyphicon-chevron-right"></span> <?php echo $link->title;?></a>
+<?php }?>
+</div>
+<?php }?>
+<div class="pull-right">
+<?php echo $this->paginator;?>
+</div>

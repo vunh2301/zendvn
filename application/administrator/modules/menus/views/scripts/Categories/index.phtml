@@ -1,0 +1,85 @@
+<form action="" id="adminForm" name="adminForm" method="post">	
+	<div class="row">
+		<nav class="navbar navbar-default" role="navigation">
+			<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-2">
+						<span class="sr-only">Toggle navigation</span>
+						&nbsp;<span class="glyphicon glyphicon-cog"></span>&nbsp;
+					</button>
+					<a class="navbar-brand" href="#">Menu Manager : Menus</a>
+				</div>
+				<div class="collapse navbar-collapse" id="navbar-collapse-2">
+					<ul class="nav navbar-nav navbar-right">
+						<input id="task" name="task" type="hidden" value="edit"/>
+							<button type="button" onclick="$('#task').val('create');$(this).closest('form').submit();" class="btn btn-default btn-sm btn-primary navbar-btn" <?php echo ($this->isAllow('menus', 'create') === true ? '' : ' disabled')?>><span class="glyphicon glyphicon-plus-sign"></span> New</button>
+							<button type="button" onclick="if(!$(this).closest('form').find('table :checked').first().val()){alert('Please first make a selection from the list!');return false;}else{$('#task').val('edit');$(this).closest('form').submit();};" class="btn btn-default btn-sm navbar-btn" <?php echo ($this->isAllow('menus', 'edit') === true ? '' : ' disabled')?>><span class="glyphicon glyphicon-edit"></span> Edit</button>
+							<button type="button" onclick="if(!$(this).closest('form').find('table :checked').first().val()){alert('Please first make a selection from the list!');return false;}else{$('#task').val('delete');$(this).closest('form').submit();};" class="btn btn-default btn-sm btn-danger navbar-btn" <?php echo ($this->isAllow('menus', 'delete') === true ? '' : ' disabled')?>><span class="glyphicon glyphicon-remove-sign"></span> Delete</button>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<ul class="nav nav-tabs">
+				<li><a href="<?= $this->url(array('module' => 'menus', 'controller'=>'menus', 'action'=>'index'), null, true); ?>">Menu Items</a></li>
+				<li class="active"><a href="#">Menus</a></li>
+		</ul>
+		<div class="panel panel-default tabs-panel">
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-4 form-group">
+						<div class="input-group">
+							<input value="<?php echo $this->filter['search']; ?>" name="filter_search" id="filter_search" placeholder="Search Menu" type="text" class="form-control input-sm">
+							<span class="input-group-btn">
+								<button class="btn btn-default btn-sm" type="button" onclick="$(this).closest('form').submit();">Search</button>
+								<button class="btn btn-default btn-sm" type="button" onclick="$('#filter_search').val(''); $(this).closest('form').submit();">Reset</button>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default margin-fix table-responsive">
+					<table class="table table-hover table-striped">
+						<thead>
+							<tr>
+								<th class="text-center" width="1%"><input type="checkbox" onchange="$(this).closest('form').find('table :checkbox').prop('checked', this.checked);"></th>
+								<th><?php echo $this->order('Title', 'title'); ?></th>
+								<th class="text-center" width="20%"><?php echo $this->order('Published', 'publish'); ?></th>
+								<th class="text-center" width="20%"><?php echo $this->order('Unpublished', 'unpublish'); ?></th>
+								<th class="text-center" width="5%"><?php echo $this->order('ID', 'id'); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php if($this->menus != null)foreach ($this->menus as $menu){ ?>
+								<tr>
+									<td><input type="checkbox" id="record-<?php echo $menu->id; ?>" name="record[]" value="<?php echo $menu->id; ?>"></td>
+									<td>
+										<a href="<?php echo $this->url(array('module' => 'menus', 'controller'=>'categories', 'action'=>'edit', 'id' => $menu->id));?>"><?php echo $menu->title; ?></a>
+										<?php if($menu->home){?>
+											<span class="glyphicon glyphicon-star text-primary" data-toggle="tooltip" title="Default Menu"></span>
+										<?php }?>
+										<br/>
+										<small>(<a href="<?php echo $this->url(array('module' => 'menus', 'controller'=>'menus', 'action'=>'index', 'filter_category' => $menu->id));?>">Menu Items</a>)</small>
+									</td>
+									<td class="text-center">
+										<span class="badge"><?php echo $menu->publish; ?></span>
+									</td>
+									<td class="text-center">
+										<span class="badge"><?php echo $menu->unpublish; ?></span>
+									</td>
+									<td class="text-center">
+										<span class="badge"><?php echo $menu->id; ?></span>
+									</td>
+								</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
+				<?php echo $this->paginator;?>
+			</div>
+		</div>
+
+	</div>
+	<input value="<?php echo $this->filter['order_by']; ?>" name="order_by" id="order_by" type="hidden"/>
+	<input value="<?php echo $this->filter['ordering']; ?>" name="ordering" id="ordering" type="hidden"/>
+</form>
+

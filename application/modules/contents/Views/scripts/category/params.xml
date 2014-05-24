@@ -1,0 +1,8 @@
+<config>
+	<title>Category Blog</title>
+	<message>Displays article introductions in a single or multi-column layout.</message>
+	<type>module</type>
+	<params>
+		<register class="Params_Form_Register"/>
+	</params>	
+</config>

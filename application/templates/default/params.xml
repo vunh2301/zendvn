@@ -1,0 +1,8 @@
+<config>
+	<title>site</title>
+	<message>Site Template</message>
+	<type>template</type>
+	<params>
+		<options class="Templates_Form_Options"/>
+	</params>
+</config>

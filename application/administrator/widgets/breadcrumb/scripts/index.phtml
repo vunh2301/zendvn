@@ -1,0 +1,25 @@
+<div class="row">
+	<ol class="breadcrumb">
+		<?php if($this->params->home){?>
+		<li>
+			<?php if($this->params->home_icon){?><span class="glyphicon glyphicon-home text-primary"></span> <?php }?><a href="/administrator">Home</a>
+		</li>
+		<?php }?>
+		<li>
+			<?php echo $this->WidgetBreadcrumb(); ?>
+		</li>
+		<?php 
+		if($breadcrumbs = Zendvn_Factory::getBreadcrumb()){
+			foreach ($breadcrumbs as $breadcrumb){
+				echo '<li class="active">';
+				if(isset($breadcrumb['url'])){
+					echo '<a class="dropdown" href="' . $breadcrumb['url'] . '">' . $breadcrumb['label'] . '</a>';
+				}else{
+					echo $breadcrumb['label'];
+				}
+				echo '</li>';
+			}
+		}
+		?>
+	</ol>
+</div>

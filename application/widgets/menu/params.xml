@@ -1,0 +1,8 @@
+<config>
+	<title>Menu</title>
+	<message>Admin Menu</message>
+	<type>widget</type>
+	<params>
+		<option class="Params_Form_Option"/>
+	</params>
+</config>

@@ -19,12 +19,9 @@
 			</div>
 		</nav>
 		<ul class="nav nav-tabs">
-			<li class="active">
-				<a href="#site" data-toggle="tab">Site</a>
-			</li>
-			<li>
-				<a href="#server" data-toggle="tab">Server</a>
-			</li>
+			<li class="active"><a href="#site" data-toggle="tab">Site</a></li>
+			<li><a href="#server" data-toggle="tab">Server</a></li>
+			<li><a href="#permission" data-toggle="tab">Permission</a></li>
 		</ul>
 		<div class="tab-content panel panel-default tabs-panel">
 			<div class="tab-pane active panel-body" id="site">
@@ -88,6 +85,9 @@
 	  				</div>
 	  				
 				</div>
+			</div>
+			<div class="tab-pane panel-body" id="permission">
+				<?php echo $this->permission; ?>
 			</div>
 		</div>
 	</div>	
